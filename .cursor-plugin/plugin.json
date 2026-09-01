@@ -1,0 +1,20 @@
+{
+  "name": "restream",
+  "version": "1.0.0",
+  "description": "Live-code to an audience from Cursor: stream to social, a webinar page, or Slack, record only, or let AI clip the highlights. Remote MCP server with tools for events, destinations, live chat, and analytics.",
+  "author": {
+    "name": "Restream"
+  },
+  "homepage": "https://restream.io",
+  "repository": "https://github.com/restreamio/cursor-plugin",
+  "license": "MIT",
+  "keywords": [
+    "restream",
+    "streaming",
+    "mcp",
+    "video",
+    "analytics"
+  ],
+  "logo": "assets/logo.webp",
+  "mcpServers": "mcp.json"
+}
