@@ -6,7 +6,7 @@
     "name": "Restream"
   },
   "homepage": "https://restream.io",
-  "repository": "https://github.com/restreamio/cursor-plugin",
+  "repository": "https://github.com/restreamio/cursor-mcp-plugin",
   "license": "MIT",
   "keywords": [
     "restream",
