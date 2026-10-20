@@ -78,3 +78,18 @@ Validate the Claude plugin and marketplace with Claude Code:
 claude plugin validate .claude-plugin/plugin.json
 claude plugin validate .claude-plugin/marketplace.json
 ```
+
+### Test a branch locally in Cursor
+
+Cursor's **Add → From Local Repository** imports a marketplace source; it does not by itself confirm that the plugin is installed. For a local smoke test, copy the committed branch into Cursor's [local plugin directory](https://cursor.com/docs/plugins#test-plugins-locally). From this repository's root:
+
+```sh
+mkdir -p "$HOME/.cursor/plugins/local"
+# Deliberately fails if an existing Restream installation would be overwritten.
+mkdir "$HOME/.cursor/plugins/local/restream" &&
+  git archive HEAD | tar -x -C "$HOME/.cursor/plugins/local/restream"
+```
+
+Open **Customize → Plugins → Restream** and verify **Skills 16** and **MCPs 1**. Sign in to Restream if prompted. If the plugin has not appeared, run **Developer: Reload Window**. Local plugin imports must be allowed by your organization, and an installed marketplace plugin with the same name takes precedence. Do not symlink this directory to a checkout elsewhere; Cursor skips symlinks whose targets are outside the local plugin directory.
+
+This installs a snapshot of the committed branch; later checkout edits do not update the installed copy.
