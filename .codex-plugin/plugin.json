@@ -1,0 +1,48 @@
+{
+  "name": "restream",
+  "version": "1.1.0",
+  "description": "Schedule, check, fix and report on Restream live streams, then turn finished streams into transcripts, captions, show notes, posts, clips and cards.",
+  "author": {
+    "name": "Restream",
+    "url": "https://restream.io"
+  },
+  "homepage": "https://restream.io",
+  "repository": "https://github.com/restreamio/cursor-mcp-plugin",
+  "license": "MIT",
+  "keywords": [
+    "restream",
+    "live-streaming",
+    "streaming"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Restream",
+    "shortDescription": "Run and reuse your streams",
+    "longDescription": "Restream connects your Restream account and adds skills for the whole life of a live stream. Before a stream: schedule or change streams on your connected channels (every change is shown first and needs your yes), check that channels are ready to go live, and find the next fix when a stream or recording fails. After a stream: report viewers and chat by channel, find unanswered viewer questions, export transcripts, captions, chat and recordings, and turn the stream into show notes, social post drafts, ranked clips and shareable cards. Sign in with your Restream account. Nothing is changed, posted or sent without your confirmation.",
+    "developerName": "Restream",
+    "category": "Productivity",
+    "capabilities": [
+      "Schedule and change live streams after you confirm",
+      "Check channels before you go live",
+      "Diagnose stream and recording problems",
+      "Report viewers and chat after a stream",
+      "Export transcripts, captions, chat and recordings",
+      "Turn streams into show notes, posts, clips and cards"
+    ],
+    "websiteURL": "https://restream.io",
+    "supportURL": "https://support.restream.io",
+    "privacyPolicyURL": "https://restream.io/privacy-policy",
+    "termsOfServiceURL": "https://restream.io/terms-of-service",
+    "defaultPrompt": [
+      "What can I do with Restream?",
+      "Am I ready to go live tonight?",
+      "How did my last stream do?"
+    ],
+    "logo": "./assets/logo.png",
+    "logoDark": "./assets/logo.png",
+    "composerIcon": "./assets/icon.png",
+    "composerIconDark": "./assets/icon.png"
+  },
+  "onboardingSkill": "./skills/restream-get-started/SKILL.md"
+}

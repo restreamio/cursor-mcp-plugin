@@ -1,0 +1,14 @@
+{
+  "name": "restream",
+  "owner": {
+    "name": "Restream",
+    "url": "https://restream.io"
+  },
+  "plugins": [
+    {
+      "name": "restream",
+      "source": "./",
+      "description": "Run Restream from your AI assistant: schedule, check and change live streams on YouTube, LinkedIn, Twitch and more, fix stream problems, and turn finished streams into reports, transcripts, captions, show notes, posts and cards. Remote MCP server with browser sign-in."
+    }
+  ]
+}

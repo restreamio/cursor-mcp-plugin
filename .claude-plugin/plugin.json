@@ -1,0 +1,23 @@
+{
+  "name": "restream",
+  "displayName": "Restream",
+  "version": "1.1.0",
+  "description": "Schedule, check, fix and report on Restream live streams, then turn finished streams into transcripts, captions, show notes, posts, clips and cards.",
+  "author": {
+    "name": "Restream",
+    "url": "https://restream.io"
+  },
+  "repository": "https://github.com/restreamio/cursor-mcp-plugin",
+  "license": "MIT",
+  "keywords": [
+    "restream",
+    "live-streaming",
+    "streaming"
+  ],
+  "icon": "./assets/logo.png",
+  "homepage": "https://restream.io",
+  "documentationUrl": "https://developers.restream.io/mcp-server",
+  "supportUrl": "https://support.restream.io",
+  "privacyPolicyUrl": "https://restream.io/privacy-policy",
+  "termsOfServiceUrl": "https://restream.io/terms-of-service"
+}

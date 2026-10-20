@@ -1,0 +1,3281 @@
+{
+  "schema_version": "1.0",
+  "audit_date": "2026-09-07",
+  "purpose": "Source-grounded route lookup for Fix My Stream; documentation facts, not customer telemetry.",
+  "coverage": {
+    "central_named_services": 30,
+    "additional_named_services": 6,
+    "named_services_total": 36,
+    "catalog_only_services": 10,
+    "custom_destination_protocols": 4,
+    "primary_streaming_families": 4,
+    "help_collections_inventoried": 14,
+    "help_articles_inventoried": 238,
+    "planned_restream_sources_retrieved": 240
+  },
+  "limitations": [
+    "Not an operational test of any account or destination.",
+    "Unknown/null means not established by reviewed documentation, not unsupported.",
+    "Documentation listings are not proof an integration is currently available to every account.",
+    "The inventory covers documented streaming routes, not all unrelated product features or every customer-specific enterprise configuration.",
+    "Refresh current provider requirements before prescribing settings or purchasing a plan."
+  ],
+  "methods": [
+    {
+      "id": "studio",
+      "name": "Browser Studio",
+      "kind": "primary",
+      "path": "Browser camera/mic/screens/media/guests → Studio composition → selected destinations.",
+      "requirements": [
+        "720p30 at 4 Mbps; 720p60 at 5 Mbps; 1080p30 at 6 Mbps, set automatically by Studio.",
+        "1080p requires Professional+. Stream quality is locked while live.",
+        "Restream recommends at least 10 Mbps upload, 25+ for Full HD; a speed test does not prove sustained transport health.",
+        "Mobile guidance: Chrome on Android, Safari on iOS."
+      ],
+      "first_checks": [
+        "Check browser-visible devices, permissions, scene/source toggles, chosen output quality and where the first defect appears."
+      ],
+      "notes": [
+        "OBS encoder controls do not apply to browser Studio. Studio 4K local recordings do not mean 4K live output."
+      ],
+      "sources": [
+        "R9090939",
+        "R8540516",
+        "R8544578",
+        "R4362617"
+      ]
+    },
+    {
+      "id": "encoder",
+      "name": "External encoder",
+      "kind": "primary",
+      "path": "Software/hardware encoder → selected Restream stream card → selected destinations.",
+      "requirements": [
+        "Use that stream card’s URL/key or documented authorized integration. A new card has a new key; reusing a card retains its key unless reset.",
+        "Common RTMP guidance: H.264, CBR, 2-second keyframes, AAC. Destination requirements override a generic preset."
+      ],
+      "first_checks": [
+        "Match the actual encoder to the intended Restream card/event, then inspect ingest and each destination.",
+        "Compare OBS network, rendering and encoding counters separately."
+      ],
+      "notes": [
+        "One source feed is replicated in the cloud. Dual feeds, backup encoders, remote production and uploads can add local bandwidth or load.",
+        "The generic 15,000 Kbps table is not a universal hard cap."
+      ],
+      "sources": [
+        "R9090939",
+        "R6505602",
+        "R73108",
+        "R9127638"
+      ]
+    },
+    {
+      "id": "prerecorded",
+      "name": "Pre-recorded video",
+      "kind": "primary",
+      "path": "Upload/import a file or reuse a recording → schedule video → cloud playout → destinations.",
+      "requirements": [
+        "MP4/MOV/M4V/MKV, H.264 video, AAC audio, 2-second keyframes. Validate source encoding; a container extension alone is insufficient.",
+        "Upload & Stream tiers govern capacity. Documented Premier/Marathon/Media libraries: 2/4/12 hours; maximum resolution 1080p/1080p/4K.",
+        "Looping: Marathon/Media, up to 10 repeats; looping article states a 40-hour cap. Destination duration limits still apply."
+      ],
+      "first_checks": [
+        "Check upload processing, source media properties, actual file selection, timezone/start time and destination activation.",
+        "A manual-start destination still requires its own Go Live action."
+      ],
+      "notes": [
+        "Playout runs in the cloud while the laptop is offline. Low laptop upload during playout is not automatically the cause.",
+        "Restream recommends 15–20 seconds of intro/outro padding for ingestion delay.",
+        "Scheduled social posts: Facebook Profile/Page, YouTube, LinkedIn; other platforms differ."
+      ],
+      "sources": [
+        "R9090939",
+        "R9330098",
+        "R2446063",
+        "R13626308",
+        "R6980009"
+      ]
+    },
+    {
+      "id": "webinar",
+      "name": "Live Webinar",
+      "kind": "primary",
+      "path": "Live Webinar setup → Studio → dedicated attendee link and optional Slack.",
+      "requirements": [
+        "Separate webinar add-on. Documentation snapshot: 100 attendees $99/month; 500 $299/month; 1,000 via custom Enterprise. Verify account billing.",
+        "No Pairs support for this workflow."
+      ],
+      "first_checks": [
+        "Identify the correct webinar/attendee link, capacity and Slack channel if used.",
+        "For a speaker request, inspect backstage admission and host controls."
+      ],
+      "notes": [
+        "The completed event keeps its replay link; a later webinar gets a new invitation link."
+      ],
+      "sources": [
+        "R9090939",
+        "R16033686",
+        "R16012759"
+      ]
+    },
+    {
+      "id": "rtmp-input",
+      "name": "RTMP ingest",
+      "kind": "input_protocol",
+      "path": "Encoder → Restream RTMP ingest.",
+      "requirements": [
+        "Server URL and stream key are separate fields unless the encoder requires a combined URL."
+      ],
+      "first_checks": [
+        "Check exact stream card and redacted error; never ask the user to paste the key or private URL."
+      ],
+      "notes": [],
+      "sources": [
+        "R6505602",
+        "R111656"
+      ]
+    },
+    {
+      "id": "rtmps-input",
+      "name": "RTMPS ingest",
+      "kind": "input_protocol",
+      "path": "Encoder → encrypted RTMP transport into Restream.",
+      "requirements": [
+        "Available on all Restream plans; use the RTMPS URL supplied by the selected card."
+      ],
+      "first_checks": [
+        "Check TLS-capable encoder and exact URL scheme."
+      ],
+      "notes": [
+        "Input encryption does not by itself prove every output leg is encrypted."
+      ],
+      "sources": [
+        "R8523770"
+      ]
+    },
+    {
+      "id": "srt-input",
+      "name": "SRT ingest",
+      "kind": "input_protocol",
+      "path": "SRT-capable encoder initiates delivery to Restream using the supplied connection details.",
+      "requirements": [
+        "Business or custom Enterprise. H.264/AAC; H.265 input is documented with conversion to H.264 for incompatible outputs.",
+        "OBS Custom: full supplied SRT URL in Server, stream-key field empty.",
+        "Incoming AES-128/256 supported with the Restream-generated passphrase. Suggested SRT latency 700 ms, maximum 1,300 ms."
+      ],
+      "first_checks": [
+        "Confirm input direction, plan and exact endpoint fields in the encoder locally.",
+        "Do not invent a Restream SRT Pull/Listener setup; use the provider-supplied push configuration."
+      ],
+      "notes": [
+        "The article’s Caller-only wording must not be interpreted as a general statement that no server listens for incoming packets.",
+        "Protocol SRT differs from .srt subtitle files."
+      ],
+      "sources": [
+        "R9943983"
+      ]
+    },
+    {
+      "id": "whip-input",
+      "name": "WHIP ingest",
+      "kind": "input_protocol",
+      "path": "WHIP encoder → Restream → native-compatible or converted RTMP outputs.",
+      "requirements": [
+        "All plans; beta. OBS WHIP service: supplied Stream URL; Bearer token left empty for this documented input.",
+        "Video H.264/VP8/VP9; audio Opus/ALAW/ULAW. This list applies to WHIP input, not RTMP input."
+      ],
+      "first_checks": [
+        "Check WHIP support in the encoder and actual input/output route."
+      ],
+      "notes": [
+        "Restream documents automatic RTMP conversion where required. Sub-second/one-second marketing latency is not an end-to-end promise."
+      ],
+      "sources": [
+        "R11780279"
+      ]
+    },
+    {
+      "id": "playlist",
+      "name": "Pre-recorded playlist",
+      "kind": "variant",
+      "path": "Up to 40 ordered video entries → scheduled cloud playlist → destinations.",
+      "requirements": [
+        "Marathon or Media Upload & Stream add-on; up to 24 hours per playlist.",
+        "Files/order editable only before live; graphics/chat can be edited during playout."
+      ],
+      "first_checks": [
+        "Check entry order, total duration, encoding and processing of the failing segment."
+      ],
+      "notes": [
+        "No blending with a live presenter. No native playlist loop; duplicate entries within the 40-entry limit. Back-to-back playlists have a documented 2-minute gap."
+      ],
+      "sources": [
+        "R13626771"
+      ]
+    },
+    {
+      "id": "studio-dual",
+      "name": "Studio landscape + portrait",
+      "kind": "variant",
+      "path": "One Studio session → 16:9 and 9:16 destination groups.",
+      "requirements": [
+        "Professional+. Assign orientation before live; active-channel orientation cannot be changed during the stream.",
+        "Graphics/elements are shared across orientations."
+      ],
+      "first_checks": [
+        "Inspect both previews and each channel’s assigned orientation."
+      ],
+      "notes": [
+        "Paired channels receive the primary landscape feed. Different graphics per orientation are not supported."
+      ],
+      "sources": [
+        "R13141556"
+      ]
+    },
+    {
+      "id": "obs-dual",
+      "name": "OBS landscape + portrait",
+      "kind": "variant",
+      "path": "OBS plus Restream Vertical plugin → landscape and portrait ingest → assigned channels.",
+      "requirements": [
+        "Guide provides macOS/Windows builds and requires current OBS. Select Restream.io service.",
+        "Primary OBS audio mixer is shared; separate vertical audio inputs not supported. Encoding parameters inherited, but vertical bitrate can differ."
+      ],
+      "first_checks": [
+        "Inspect both monitor tabs and actual vertical source; a Portrait assignment alone falls back to the primary landscape feed if no vertical plugin output arrives."
+      ],
+      "notes": [
+        "YouTube Landscape + Portrait produces separate events and combines their chats. Allow for additional encoding/network workload."
+      ],
+      "sources": [
+        "R11730141"
+      ]
+    },
+    {
+      "id": "rtmp-source",
+      "name": "Encoder feed inside Studio",
+      "kind": "composition_input",
+      "path": "Encoder or Zoom → Studio RTMP Source → Studio composition → destinations.",
+      "requirements": [
+        "Business/custom Enterprise; one RTMP Source at a time.",
+        "Source guidance: 720p up to 60 fps (2,800 Kbps at 30, 4,500 at 60 recommended); 1080p up to 30 fps, 4,500 Kbps recommended; AAC; 2-second keyframes."
+      ],
+      "first_checks": [
+        "Use the Studio source credentials, not an unrelated encoder stream card.",
+        "Confirm the source appears and is included in the active scene before debugging destinations."
+      ],
+      "notes": [],
+      "sources": [
+        "R8544194",
+        "R4956628"
+      ]
+    },
+    {
+      "id": "zoom-input",
+      "name": "Zoom meeting/webinar into Restream",
+      "kind": "source_adapter",
+      "path": "Zoom custom live-streaming service → Restream encoder card OR Studio RTMP Source.",
+      "requirements": [
+        "Zoom account admin enables custom live streaming. Eligible paid account and host Meetings/Webinars license required by the guide.",
+        "Zoom asks for a playback-page URL; it does not determine the complete Restream destination list."
+      ],
+      "first_checks": [
+        "Confirm direction and host/license permissions.",
+        "Check whether copied credentials belong to a standalone encoder card or Studio source."
+      ],
+      "notes": [
+        "Zoom → Restream is different from the Zoom Events/Webinars Plus incoming-destination feature."
+      ],
+      "sources": [
+        "R3314278",
+        "R4956628"
+      ]
+    },
+    {
+      "id": "mobile",
+      "name": "Mobile streaming",
+      "kind": "source_adapter",
+      "path": "Mobile browser Studio OR a mobile encoder → Restream.",
+      "requirements": [
+        "Browser guidance: Android Chrome / iOS Safari. Encoder apps have separate licenses and controls.",
+        "Larix combines URL/key with a slash; mobile Streamlabs uses separate fields in the guide; Wirecast Go custom RTMP requires payment."
+      ],
+      "first_checks": [
+        "Identify app versus browser, foreground state, camera/mic permissions and thermal/network conditions.",
+        "Inspect URL-field format locally without exposing credentials."
+      ],
+      "notes": [],
+      "sources": [
+        "R4362617",
+        "R1029917",
+        "R2226971",
+        "R1331080"
+      ]
+    },
+    {
+      "id": "console",
+      "name": "Console gameplay",
+      "kind": "source_adapter",
+      "path": "Console → capture card or Remote Play on desktop → OBS/Studio → Restream.",
+      "requirements": [
+        "Capture card: console HDMI out → card in; card USB → computer; add capture source.",
+        "PS Remote Play: Windows/macOS; not every game/peripheral supported. Xbox guide uses Windows Xbox app."
+      ],
+      "first_checks": [
+        "Compare capture/Remote Play preview with program output before testing Restream.",
+        "A black capture feed can be source/HDCP configuration; follow console/device documentation for gameplay capture."
+      ],
+      "notes": [
+        "This guide does not establish a direct arbitrary-RTMP broadcast from the console."
+      ],
+      "sources": [
+        "R2417391",
+        "R206176",
+        "R2448620",
+        "R3164009"
+      ]
+    },
+    {
+      "id": "audio-only",
+      "name": "Audio-first Studio show",
+      "kind": "variant",
+      "path": "Mic/mixer or recorded audio → Studio with avatar/image/video background → destinations.",
+      "requirements": [
+        "One audio input per participant; an extra camera can add another source."
+      ],
+      "first_checks": [
+        "Check intended mic and live audio; hiding a camera/participant avatar does not mute audio."
+      ],
+      "notes": [
+        "An audio-first show can still transmit a video canvas; do not remove the video track without destination support."
+      ],
+      "sources": [
+        "R9183117"
+      ]
+    },
+    {
+      "id": "record-only",
+      "name": "Record without broadcasting",
+      "kind": "nonbroadcast",
+      "path": "Studio → recording in storage; no destination broadcast.",
+      "requirements": [
+        "Paid plans; guide also documents a limited Free trial. Standard up to 6 hours; Professional/Business up to 10."
+      ],
+      "first_checks": [
+        "Confirm Record only versus Go Live.",
+        "A successful recording checks production, not destination ingest or playback."
+      ],
+      "notes": [],
+      "sources": [
+        "R5028560"
+      ]
+    },
+    {
+      "id": "local-recording",
+      "name": "Local Studio recordings",
+      "kind": "recording_variant",
+      "path": "Individual participant devices → upload recording segments → host downloads.",
+      "requirements": [
+        "Professional+; beta; desktop Chromium recommended, mobile participants excluded during beta.",
+        "Studio only; local CPU/storage used; participant must finish uploading segments."
+      ],
+      "first_checks": [
+        "Check device/browser and incomplete uploads before declaring lost recordings.",
+        "RTMP sources, graphics/layouts and cloud-storage media are not included as local source tracks."
+      ],
+      "notes": [
+        "4K recording capability is separate from Studio live output resolution."
+      ],
+      "sources": [
+        "R12459078"
+      ]
+    }
+  ],
+  "encoder_adapters": [
+    {
+      "name": "OBS Studio",
+      "route": "Restream account authorization or manual stream key.",
+      "first_check": "Authorized login targets Default RTMP; a scheduled card may require its own key. Do not blindly apply generic Main-profile guidance to a destination requiring another profile.",
+      "sources": [
+        "R111656"
+      ]
+    },
+    {
+      "name": "Streamlabs Desktop",
+      "route": "Select Restream.io and paste the intended card key.",
+      "first_check": "Check destination-specific encoding; x264 in this guide is a suggested setup, not proof hardware encoding is unsupported.",
+      "sources": [
+        "R1576341"
+      ]
+    },
+    {
+      "name": "Ecamm Live",
+      "route": "Mac application; authorize Restream and select immediate or Upcoming event.",
+      "first_check": "Verify selected event; comments/reactions integration depends on destination chat support.",
+      "sources": [
+        "R2276654"
+      ]
+    },
+    {
+      "name": "vMix",
+      "route": "Authorize Restream or configure the required manual ingest route.",
+      "first_check": "Authorized integration targets Default RTMP; guide suggests Strict CBR, aligned keyframes at 2 seconds.",
+      "sources": [
+        "R1748371"
+      ]
+    },
+    {
+      "name": "LiveU Solo",
+      "route": "Authorize the Restream One-Touch destination.",
+      "first_check": "Authorized integration targets Default RTMP; SRT output has its own Caller configuration.",
+      "sources": [
+        "R2488376"
+      ]
+    },
+    {
+      "name": "XSplit",
+      "route": "Install/authorize Restream output.",
+      "first_check": "Authorized integration targets Default RTMP; inspect selected server and card.",
+      "sources": [
+        "R208459"
+      ]
+    },
+    {
+      "name": "Wirecast",
+      "route": "RTMP Server output: Address = URL, Stream = key.",
+      "first_check": "Verify the actual destination card and its encoding requirements.",
+      "sources": [
+        "R215426"
+      ]
+    },
+    {
+      "name": "TriCaster",
+      "route": "Custom preset: Server Address = URL; Stream ID = key.",
+      "first_check": "Do not confuse RTMP Stream ID field with an SRT streamid parameter.",
+      "sources": [
+        "R2454689"
+      ]
+    },
+    {
+      "name": "Streamlabs Mobile",
+      "route": "Custom RTMP with URL and key fields.",
+      "first_check": "Select camera versus screenshare and the intended output server.",
+      "sources": [
+        "R1029917"
+      ]
+    },
+    {
+      "name": "Larix Broadcaster",
+      "route": "iOS/Android; combined URL/key separated by slash.",
+      "first_check": "Restream guide cites a one-hour free-app limit; confirm current Larix entitlement before assigning an hour-long stop to Restream.",
+      "sources": [
+        "R2226971"
+      ]
+    },
+    {
+      "name": "Wirecast Go",
+      "route": "iOS; custom server URL and Stream Name/Key.",
+      "first_check": "Guide says custom RTMP requires payment; verify app access.",
+      "sources": [
+        "R1331080"
+      ]
+    }
+  ],
+  "platforms": [
+    {
+      "id": "amazon-ivs",
+      "name": "Amazon IVS",
+      "in_central_catalog": false,
+      "documentation_status": "setup_documented",
+      "connection_route": "Paid Custom RTMP output to an AWS IVS low-latency channel.",
+      "eligibility_and_plan": [
+        "AWS account and IVS channel; Standard channel type for Full HD in the Restream guide."
+      ],
+      "video_guidance": [
+        "480p/720p/1080p, 30/60 fps; H.264 CBR, 1,500–8,500 Kbps, keyframes 2 seconds."
+      ],
+      "audio_guidance": [
+        "AAC-LC, 96–320 Kbps, 44.1 or 48 kHz, mono/stereo."
+      ],
+      "first_checks": [
+        "Verify IVS channel type and ingest details.",
+        "Do not confuse the low-latency channel route with IVS real-time Stages."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [],
+      "variants": [],
+      "aliases": [
+        "ivs"
+      ],
+      "sources": [
+        "R6136293",
+        "R369436"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "amazon-live",
+      "name": "Amazon Live",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named channel; manual URL/key from Amazon Live Creator external-camera mode.",
+      "eligibility_and_plan": [
+        "Any Restream plan.",
+        "Amazon eligibility: active-storefront Influencer, brand-owner Seller Central account, or approved vendor with an Amazon Store."
+      ],
+      "video_guidance": [
+        "Restream recommendation: 720p, AVC level 3.1, keyframes at most 2 seconds apart."
+      ],
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm external-camera feed reaches Amazon Preview, then use Amazon Go Live.",
+        "End on Amazon before ending the upstream stream."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R6959322"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "bilibili",
+      "name": "Bilibili",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "Sa56da4b789"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "breakers-tv",
+      "name": "Breakers.TV",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "Sc71e25b24f"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "dailymotion",
+      "name": "Dailymotion",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named account sign-in integration.",
+      "eligibility_and_plan": [
+        "Dailymotion paid live-streaming entitlement required; check the provider account."
+      ],
+      "video_guidance": [
+        "H.264 High; 480p/720p/1080p; 1,500–10,000 Kbps depending on format; 30/60 fps; keyframes 2 seconds."
+      ],
+      "audio_guidance": [
+        "AAC, 192 Kbps minimum, 44.1 kHz in the published encoder guidance."
+      ],
+      "first_checks": [
+        "Check live entitlement and selected channel.",
+        "Compare actual output audio with the 192 Kbps minimum; a shared 128 Kbps preset does not match this guidance."
+      ],
+      "chat": null,
+      "notes": [
+        "Category can be edited through Restream. Provider also documents SRT; that is a separate route from the named integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R73033",
+        "S95bc45e2a3"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "douyu",
+      "name": "Douyu",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "S26bd6c11b6"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "facebook",
+      "name": "Facebook",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Select the actual Profile, Page, or Group route; they have different permissions and controls.",
+      "eligibility_and_plan": [
+        "Meta account at least 60 days old.",
+        "Professional-mode Profile or Page: at least 100 followers. Do not apply that threshold to Groups without separate evidence."
+      ],
+      "video_guidance": [
+        "H.264 CBR; up to 1080p60; video at most 15,000 Kbps; keyframes 2 seconds recommended, at most 4."
+      ],
+      "audio_guidance": [
+        "AAC stereo; 128 Kbps recommended, at most 256; 44.1 or 48 kHz."
+      ],
+      "first_checks": [
+        "Identify Profile/Page/Group before recommending reconnection.",
+        "Check Public visibility, account authorization or Live Producer preview, and the exact event."
+      ],
+      "chat": null,
+      "notes": [
+        "Facebook live duration: up to 8 hours; recording retention on Facebook: 30 days. These are separate limits.",
+        "Groups do not support Restream chat, analytics, or title updates.",
+        "Page guide also contains upload-size/duration examples; those are not a 30-minute live-stream limit."
+      ],
+      "variants": [
+        {
+          "id": "facebook-profile",
+          "name": "Facebook Profile",
+          "route": "Account authorization; available on Restream Free.",
+          "requirements": "Public visibility required for chat; professional-mode profile needs 100 followers.",
+          "chat": {
+            "read": true,
+            "reply": false,
+            "relay": false
+          },
+          "sources": [
+            "R2251873",
+            "R2379624"
+          ]
+        },
+        {
+          "id": "facebook-page",
+          "name": "Facebook Page",
+          "route": "Authorize through the managing Facebook account; paid Restream plan.",
+          "requirements": "Page management permission and 100 followers.",
+          "chat": {
+            "read": true,
+            "reply": true,
+            "relay": false
+          },
+          "sources": [
+            "R6158091",
+            "R2379624"
+          ]
+        },
+        {
+          "id": "facebook-group",
+          "name": "Facebook Group",
+          "route": "Paid Restream; manually copy Live Producer URL/key.",
+          "requirements": "Enable live video in the Group. Start in Live Producer after Restream preview unless scheduled automatic start is configured. Persistent key supports one video at a time; otherwise update the key per event.",
+          "chat": {
+            "read": false,
+            "reply": false,
+            "relay": false
+          },
+          "sources": [
+            "R4798898"
+          ]
+        }
+      ],
+      "aliases": [],
+      "sources": [
+        "R2251873",
+        "R6158091",
+        "R4798898",
+        "R2379624"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "fc2-live",
+      "name": "FC2 Live",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named manual URL/key channel; obtain broadcast-software details in FC2.",
+      "eligibility_and_plan": [
+        "Documented as available on all Restream plans."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Verify FC2 broadcast setup and that URL and key come from the intended account.",
+        "Obtain current encoder limits from FC2; the Restream guide supplies no numerical profile."
+      ],
+      "chat": null,
+      "notes": [],
+      "variants": [],
+      "aliases": [
+        "fc2"
+      ],
+      "sources": [
+        "R1553568"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "huya",
+      "name": "Huya",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "S818242a5f3"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "instagram",
+      "name": "Instagram",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named manual stream-key channel using desktop Instagram Live Producer.",
+      "eligibility_and_plan": [
+        "Public Instagram account with at least 1,000 followers; professional account for the documented desktop workflow."
+      ],
+      "video_guidance": [
+        "9:16 recommended; 720×1280; 30 fps recommended, up to 60; 2,250–6,000 Kbps."
+      ],
+      "audio_guidance": [
+        "Stereo, 44.1 kHz, at most 256 Kbps."
+      ],
+      "first_checks": [
+        "Use a fresh key for each new stream; keep the Instagram Live tab open.",
+        "When preview is present, click Go Live on Instagram; confirm visibility from a different account.",
+        "End on Instagram before Restream."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [
+        "Restream guide states a one-hour broadcast limit and a five-hour preview-to-Go-Live window; do not generalize to every native Instagram workflow.",
+        "Landscape Studio feed is adapted; encoder/Zoom/pre-recorded landscape can be center-cropped. Check actual orientation before changing encoding.",
+        "The Instagram preview may show 30 fps even with 60 fps input."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R6379108",
+        "Seabc5c5f44"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "kakaotv",
+      "name": "KakaoTV",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "S1fd43af384"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "kick",
+      "name": "Kick",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Account authorization; old manual-key connections have different chat capabilities.",
+      "eligibility_and_plan": [
+        "Check current Kick account access; no specific follower threshold stated in the Restream setup guide."
+      ],
+      "video_guidance": [
+        "H.264 CBR; up to 1080p60; 1,000–8,000 Kbps; keyframes 2 seconds."
+      ],
+      "audio_guidance": [
+        "Stereo; sample rate at most 48 kHz. Bitrate not specified in this guide."
+      ],
+      "first_checks": [
+        "Check whether this is the current authorized integration or an older key connection.",
+        "Check title/category and the destination player."
+      ],
+      "chat": {
+        "read": true,
+        "reply": true,
+        "relay": true
+      },
+      "notes": [
+        "Restream states no live-duration cap but only the first 48 hours are retained in a VOD. This is not a guarantee of uninterrupted Restream delivery."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R7183157",
+        "R2379624"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "linkedin",
+      "name": "LinkedIn",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Authorize a personal profile or managed Page.",
+      "eligibility_and_plan": [
+        "At least 150 followers/connections; account at least 30 days old; good standing; not available in mainland China.",
+        "Only one LinkedIn channel active at a time under the documented integration."
+      ],
+      "video_guidance": [
+        "16:9; 720p recommended, at most 1080p; at most 30 fps; H.264; 3,500 Kbps recommended, 6,000 maximum; keyframes 2 seconds."
+      ],
+      "audio_guidance": [
+        "AAC, 128 Kbps, 48 kHz."
+      ],
+      "first_checks": [
+        "Check Live approval and correct profile/Page.",
+        "For a scheduled event, allowed start window is 15 minutes before to 2 hours after its scheduled start.",
+        "Since June 22, 2026, LinkedIn requires a scheduled event; Restream says it creates the required event post automatically for an immediate start."
+      ],
+      "chat": {
+        "read": true,
+        "reply": true,
+        "relay": false,
+        "caveat": "Replies via Restream may require viewers to refresh LinkedIn; an older FAQ still says read-only."
+      },
+      "notes": [
+        "Up to 4 hours. Page test events exist; personal-profile tests are public. Do not use the real announced event as a rehearsal."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R2897856",
+        "S1925d041c9",
+        "Sdf4b11c1c0",
+        "R2379624"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "major-league-gaming",
+      "name": "Major League Gaming",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "S8db6d9dcf9"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "microsoft-teams",
+      "name": "Microsoft Teams",
+      "in_central_catalog": false,
+      "documentation_status": "legacy_guide_conflict",
+      "connection_route": "Restream legacy guide uses Custom RTMP → Teams Live Events; current Teams RTMP-In requires a different event/policy check.",
+      "eligibility_and_plan": [
+        "Paid Restream Custom RTMP. Teams licensing, rollout and organizer policy must permit the current RTMP-In experience."
+      ],
+      "video_guidance": [
+        "Current Microsoft RTMP-In guidance: H.264, square pixels; CBR at 720p, CBR/VBR at 1080p; at least 29.97/30 fps."
+      ],
+      "audio_guidance": null,
+      "first_checks": [
+        "First distinguish a legacy event scheduled before June 30, 2026 from a new meeting/event.",
+        "For a new event, verify current Teams RTMP-In policy and obtain its own endpoint; do not follow the retired Live Event creation wizard."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [
+        "Microsoft: Teams Live Events retired June 30, 2026; previously scheduled events supported through February 28, 2027.",
+        "Current RTMP-In endpoints transition during 2026; verify Microsoft’s domain/port guidance for the endpoint in use."
+      ],
+      "variants": [],
+      "aliases": [
+        "teams"
+      ],
+      "sources": [
+        "R4118493",
+        "S9d4fb2569c",
+        "Sc332284e6e",
+        "R369436"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "mixcloud",
+      "name": "Mixcloud",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named manual reusable stream key; edit metadata in Mixcloud.",
+      "eligibility_and_plan": [
+        "Mixcloud Pro required."
+      ],
+      "video_guidance": [
+        "720p–1080p, 2,500–3,500 Kbps, 30 fps, 16:9, keyframes 2 seconds."
+      ],
+      "audio_guidance": [
+        "320 Kbps recommended. The guide labels CBR as a sample rate; that is a units error, not a Hz value."
+      ],
+      "first_checks": [
+        "Check Mixcloud Pro and reusable key.",
+        "Do not interpret missing Restream chat or title controls as a failed stream."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R4179344"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "mux",
+      "name": "Mux",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named manual stream-key channel; create a live-stream resource in the Mux API.",
+      "eligibility_and_plan": [
+        "All Restream plans; Mux usage may be billed separately."
+      ],
+      "video_guidance": [
+        "H.264 Main; examples: 1080p30 at 5,000 Kbps, 720p30 at 3,500, 480p30 at 1,000.",
+        "Keyframes 2 seconds; guide gives 5 seconds for its 480p example."
+      ],
+      "audio_guidance": [
+        "AAC; no audio bitrate stated."
+      ],
+      "first_checks": [
+        "Confirm the Mux live-stream resource and its associated key.",
+        "Inspect Mux status/playback as well as Restream output."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [
+        "Keys can be reused; Restream analytics unavailable for this integration. Custom SRT is a separate documented alternative."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R11464405"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "naver-tv",
+      "name": "Naver TV",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "Sbe8e1b2167"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "nimo-tv",
+      "name": "Nimo TV",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named manual server URL/key from the Nimo streamer dashboard.",
+      "eligibility_and_plan": [
+        "All Restream plans."
+      ],
+      "video_guidance": [
+        "720p/1080p, 30/60 fps, 1,200–6,000 Kbps depending on format."
+      ],
+      "audio_guidance": [
+        "64 Kbps recommended."
+      ],
+      "first_checks": [
+        "Confirm dashboard-issued URL/key.",
+        "Set title/category on Nimo; Restream cannot edit them."
+      ],
+      "chat": null,
+      "notes": [],
+      "variants": [],
+      "aliases": [
+        "nimo"
+      ],
+      "sources": [
+        "R3112026"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "nonolive",
+      "name": "Nonolive",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "Scd13e8c855"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "patreon",
+      "name": "Patreon",
+      "in_central_catalog": false,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named account authorization.",
+      "eligibility_and_plan": [
+        "All Restream plans. Published Patreon page, Safe for All Audiences, good standing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Supply a description; it is required.",
+        "Confirm whether audience is all members, paid members or selected tiers."
+      ],
+      "chat": null,
+      "notes": [
+        "No numerical encoder or chat profile established by this setup guide."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R15398147"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "picarto",
+      "name": "Picarto.TV",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named account authorization.",
+      "eligibility_and_plan": [
+        "All Restream plans."
+      ],
+      "video_guidance": [
+        "x264; 480p/720p/1080p; 350–2,500 Kbps; 25/30 fps; keyframes 2 seconds recommended, at most 4."
+      ],
+      "audio_guidance": null,
+      "first_checks": [
+        "Compare actual frame rate and bitrate to the relatively low documented profile.",
+        "Check account authorization and category."
+      ],
+      "chat": null,
+      "notes": [],
+      "variants": [],
+      "aliases": [
+        "picarto.tv"
+      ],
+      "sources": [
+        "R73178"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "rumble",
+      "name": "Rumble",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Authorize profile or select a single channel.",
+      "eligibility_and_plan": [
+        "At least 5 followers OR Rumble Premium OR phone verification."
+      ],
+      "video_guidance": [
+        "720p/1080p, up to 60 fps; H.264 level 4.1 at 30 fps or 4.2 at 60; CBR at most 8,000 Kbps; keyframes 2 seconds."
+      ],
+      "audio_guidance": [
+        "AAC stereo, 128 Kbps, 44.1 kHz."
+      ],
+      "first_checks": [
+        "Confirm the selected profile/channel; selection cannot be changed while live.",
+        "Check eligibility before encoder changes."
+      ],
+      "chat": {
+        "read": true,
+        "reply": true,
+        "relay": false
+      },
+      "notes": [
+        "Thumbnail setting through Restream is not currently documented as supported."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R9322994",
+        "R2379624"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "slack",
+      "name": "Slack",
+      "in_central_catalog": false,
+      "documentation_status": "setup_documented",
+      "connection_route": "Restream Live Webinar → authorize Slack workspace/channel.",
+      "eligibility_and_plan": [
+        "Live Webinar workflow and webinar add-on required.",
+        "For a private Slack channel, add the Restream app to that channel first."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm this is a Webinar setup; a generic Encoder stream is not the documented Slack route.",
+        "If public channel search fails, try its channel ID."
+      ],
+      "chat": {
+        "read": true,
+        "reply": true,
+        "relay": null
+      },
+      "notes": [
+        "Multiple channels/workspaces can receive one webinar. The Slack event post supports the live session and its replay."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R16012759",
+        "R16033686"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "soop",
+      "name": "SOOP",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "S1133956734"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "steam",
+      "name": "Steam",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named manual URL/key; configure Store Broadcast and the intended AppID.",
+      "eligibility_and_plan": [
+        "Store Broadcast Beta membership; account must not be limited; Restream cites at least $5 spent.",
+        "Account must own the AppID. Adult-only games excluded in this guide."
+      ],
+      "video_guidance": [
+        "16:9; 720p or 1080p. No numerical bitrate/FPS profile in the Restream article."
+      ],
+      "audio_guidance": null,
+      "first_checks": [
+        "Verify AppID ownership, broadcast configuration, and Public viewing for store-page visibility."
+      ],
+      "chat": null,
+      "notes": [],
+      "variants": [],
+      "aliases": [
+        "steam-broadcast"
+      ],
+      "sources": [
+        "R1846325"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "substack",
+      "name": "Substack",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named manual key from the publication’s new live-video setup.",
+      "eligibility_and_plan": [
+        "Restream describes encoder streaming as beta and available to selected creators; verify actual account access."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm publication, audience, live-video eligibility and generated key.",
+        "Use Substack for chat and analytics."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R11421657"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "telegram",
+      "name": "Telegram",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named manual channel-specific server URL/key.",
+      "eligibility_and_plan": [
+        "All Restream plans; Telegram channel/group owner or admin permissions."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "After Restream sends a preview, click Start Streaming in Telegram.",
+        "End in Telegram before ending upstream."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [
+        "Restream cannot set custom stream titles for this route."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R6061986"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "tiktok",
+      "name": "TikTok",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "TikTok Live account authorization; a provider-issued stream key can instead use paid Custom RTMP.",
+      "eligibility_and_plan": [
+        "Third-party LIVE approval is separate from mobile-app LIVE and TikTok Live Studio access.",
+        "Restream documents a 50% recent gaming-content condition for its third-party access route, effective July 7, 2025; rejected creators may reapply after 14 days. This is not a universal TikTok LIVE rule."
+      ],
+      "video_guidance": [
+        "Restream recommendations: portrait; 1080p or at least 720p; around 2,500 Kbps depending on format; x264.",
+        "60 fps suggested, with 30+ for gaming or 24+ for lifestyle. These are recommendations, not a guarantee at every bitrate."
+      ],
+      "audio_guidance": [
+        "160 or 256 Kbps recommended."
+      ],
+      "first_checks": [
+        "For Streaming not allowed, inspect third-party approval before touching the encoder.",
+        "For a manual key route, check the destination preview/start controls and End LIVE video if stream stops setting."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [
+        "Title limit 32 bytes, not 32 characters. Title and thumbnail cannot be updated after start. Keep the TikTok monitor open."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R6721574",
+        "R2379624"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "twitch",
+      "name": "Twitch",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Account authorization for the standard Restream route.",
+      "eligibility_and_plan": [
+        "Verify account access and which Twitch ingest path is used."
+      ],
+      "video_guidance": [
+        "Standard Restream guide: H.264 CBR, up to 1080p60, 3,000–6,000 Kbps, keyframes 2 seconds.",
+        "Twitch Enhanced Broadcasting/2K uses different capabilities. Do not apply direct enhanced-path settings to Restream without confirming compatibility."
+      ],
+      "audio_guidance": [
+        "AAC; Restream recommends 96 Kbps, at most 160 Kbps."
+      ],
+      "first_checks": [
+        "Identify standard RTMP, WHIP beta, or direct Enhanced Broadcasting path.",
+        "Compare channel playback with Restream preview; check Disconnect Protection only if already configured."
+      ],
+      "chat": {
+        "read": true,
+        "reply": true,
+        "relay": true
+      },
+      "notes": [
+        "Restream guide states a 48-hour maximum. Higher-resolution/beta claims in that guide require route-specific verification."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R68754",
+        "Seca53c3b06",
+        "S6994791d7e",
+        "R2379624"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "vaughn-live",
+      "name": "Vaughn Live",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Named manual server/channel URL and key.",
+      "eligibility_and_plan": [
+        "All Restream plans."
+      ],
+      "video_guidance": [
+        "720p recommended or 1080p; CBR 1,500–2,500 Kbps; 30/60 fps; keyframes 2 seconds; High profile."
+      ],
+      "audio_guidance": [
+        "AAC 128 Kbps."
+      ],
+      "first_checks": [
+        "Use the selected server’s URL and correct channel key.",
+        "Set title/category on Vaughn."
+      ],
+      "chat": null,
+      "notes": [],
+      "variants": [],
+      "aliases": [
+        "vaughn",
+        "vaughnlive"
+      ],
+      "sources": [
+        "R73107"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "vimeo",
+      "name": "Vimeo",
+      "in_central_catalog": false,
+      "documentation_status": "setup_documented",
+      "connection_route": "Paid Restream Custom RTMP/RTMPS; create an encoder event on Vimeo.",
+      "eligibility_and_plan": [
+        "Paid Restream plan and a Vimeo account entitled to live streaming; exact Vimeo plan not specified in the Restream guide."
+      ],
+      "video_guidance": [
+        "Restream recommendation: 1080p30, 5,000 Kbps, keyframes 2 seconds."
+      ],
+      "audio_guidance": [
+        "256 Kbps recommended."
+      ],
+      "first_checks": [
+        "Verify Vimeo live entitlement, event preview and the event’s own URL/key."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [
+        "No Restream analytics or title updates through the custom route."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R4556595",
+        "R369436"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "x",
+      "name": "X",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Account authorization.",
+      "eligibility_and_plan": [
+        "Verified X Premium account required by Restream’s guide."
+      ],
+      "video_guidance": [
+        "720p30 recommended; up to 1080p, but 60 fps only at 720p; H.264/AVC.",
+        "Keyframes 3 seconds; 9,000 Kbps recommended, 12,000 maximum in the Restream guide."
+      ],
+      "audio_guidance": [
+        "AAC-LC at most 128 Kbps."
+      ],
+      "first_checks": [
+        "Check Premium/verification and broadcast comments rather than replies to the announcement post.",
+        "Do not assume the common 2-second recommendation is X’s stated recommendation."
+      ],
+      "chat": {
+        "read": true,
+        "reply": true,
+        "relay": false
+      },
+      "notes": [
+        "Title up to 256 characters; descriptions not displayed. No advance event post from Restream."
+      ],
+      "variants": [],
+      "aliases": [
+        "twitter"
+      ],
+      "sources": [
+        "R5594822",
+        "R2379624"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "youtube",
+      "name": "YouTube",
+      "in_central_catalog": true,
+      "documentation_status": "setup_documented",
+      "connection_route": "Authorize the channel owner; manager/editor access is insufficient for this documented integration.",
+      "eligibility_and_plan": [
+        "Enable live streaming and complete verification; first activation may take 24 hours."
+      ],
+      "video_guidance": [
+        "Use YouTube’s codec-specific table. H.264 recommended Kbps: ≤720p30 4,000; 720p60 6,000; 1080p30 10,000; 1080p60 12,000; 1440p30 15,000; 1440p60 24,000; 2160p30 30,000; 2160p60 35,000.",
+        "CBR; keyframes 2 seconds recommended, at most 4; up to 60 fps. AV1/HEVC ranges are separate and do not prove codec support across Restream."
+      ],
+      "audio_guidance": [
+        "YouTube guidance: AAC or MP3; stereo 128 Kbps at 44.1 kHz; 5.1 uses 384 Kbps at 48 kHz. Verify full route codec/layout support."
+      ],
+      "first_checks": [
+        "Check channel owner, live enablement, event identity and selected latency before bitrate changes.",
+        "For dual output, inspect the correct landscape or portrait YouTube event."
+      ],
+      "chat": {
+        "read": true,
+        "reply": true,
+        "relay": true
+      },
+      "notes": [
+        "Restream states only streams shorter than 12 hours are archived automatically; archive limit is not the live duration.",
+        "Restream OBS dual output creates two YouTube events with combined chat. Shorts/vertical is a format, not another service."
+      ],
+      "variants": [],
+      "aliases": [
+        "youtube-shorts",
+        "shorts"
+      ],
+      "sources": [
+        "R3703373",
+        "Sd05ac6e206",
+        "R2379624"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "zhanqi-tv",
+      "name": "Zhanqi.tv",
+      "in_central_catalog": true,
+      "documentation_status": "catalog_only_redirect",
+      "connection_route": "Named in Restream’s central catalog; current channel-specific setup not verified.",
+      "eligibility_and_plan": [
+        "Eligibility, regional access, account approval and provider plan are not established by the catalog listing."
+      ],
+      "video_guidance": null,
+      "audio_guidance": null,
+      "first_checks": [
+        "Confirm that this destination is actually available in the user’s Add Channel screen.",
+        "Obtain current provider encoder setup and exact error text before proposing connection or encoding settings."
+      ],
+      "chat": null,
+      "notes": [
+        "No dedicated setup article found in the 14-collection inventory. The integration link redirected to the generic Choose how to go live article. Listing is not proof of a currently operating integration."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R872029",
+        "S4f87d1c700"
+      ],
+      "operationally_tested": false
+    },
+    {
+      "id": "zoom",
+      "name": "Zoom",
+      "in_central_catalog": false,
+      "documentation_status": "setup_documented",
+      "connection_route": "Restream → paid Custom RTMP → Zoom Incoming livestream; distinct from Zoom → Restream.",
+      "eligibility_and_plan": [
+        "Zoom Events or Zoom Webinars Plus, Unlimited or Pay Per Attendee. Host/co-host setup access.",
+        "Zoom desktop Windows/macOS/Linux 6.2.0+ per Restream guide; verify current minimum."
+      ],
+      "video_guidance": [
+        "Guide gives upload-speed recommendations of 4 Mbps for 720p30 and 6 Mbps for 1080p30; these are not video bitrate limits."
+      ],
+      "audio_guidance": null,
+      "first_checks": [
+        "Enable Incoming livestream in the Zoom session and copy its URL/key.",
+        "Join the event; use More → Incoming livestream → Send live after the feed arrives."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "notes": [
+        "An ordinary Zoom meeting subscription does not establish access to this incoming route. Restream guide contains a stray Vimeo authentication sentence; verify Zoom-specific requirements."
+      ],
+      "variants": [],
+      "aliases": [],
+      "sources": [
+        "R11174538",
+        "R369436"
+      ],
+      "operationally_tested": false
+    }
+  ],
+  "custom_protocols": [
+    {
+      "id": "custom-rtmp",
+      "name": "Custom RTMP/RTMPS",
+      "kind": "custom_destination",
+      "requirements": [
+        "Paid Restream plan; provider-issued URL and key; authentication only when required by that provider."
+      ],
+      "first_checks": [
+        "Check endpoint scheme, exact event/key and provider-side preview/start."
+      ],
+      "notes": [
+        "No API-dependent chat/analytics/title management. The destination must actually support ingest."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "restream_analytics": false,
+      "restream_title_updates": false,
+      "sources": [
+        "R369436"
+      ]
+    },
+    {
+      "id": "custom-srt",
+      "name": "Custom SRT",
+      "kind": "custom_destination",
+      "requirements": [
+        "Business/custom Enterprise; provider-issued srt:// destination URL."
+      ],
+      "first_checks": [
+        "Confirm outgoing direction and provider endpoint.",
+        "The custom-channel form documents separate Stream ID/passphrase fields, while the SRT FAQ says per-output latency/encryption configuration is unavailable. Verify the actual contract with Restream before promising those controls."
+      ],
+      "notes": [
+        "Do not transfer incoming SRT’s AES/latency capabilities to every output."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "restream_analytics": false,
+      "restream_title_updates": false,
+      "sources": [
+        "R10577576",
+        "R9943983"
+      ]
+    },
+    {
+      "id": "custom-hls",
+      "name": "Custom HLS",
+      "kind": "custom_destination",
+      "requirements": [
+        "Business/custom Enterprise; provider must support HLS ingest at the supplied http(s) URL."
+      ],
+      "first_checks": [
+        "Confirm this is an ingest endpoint, not a viewer’s .m3u8 playback URL."
+      ],
+      "notes": [
+        "This output route does not establish HLS/m3u8 source ingestion into Restream."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "restream_analytics": false,
+      "restream_title_updates": false,
+      "sources": [
+        "R12945740"
+      ]
+    },
+    {
+      "id": "custom-whip",
+      "name": "Custom WHIP",
+      "kind": "custom_destination",
+      "requirements": [
+        "All plans; provider-issued http(s) WHIP endpoint; beta."
+      ],
+      "first_checks": [
+        "Check endpoint capability and authentication requirements with provider; do not copy the empty-token input rule to arbitrary outputs."
+      ],
+      "notes": [
+        "Restream explicitly does not recommend this beta for production-grade workflows. No guaranteed end-to-end latency."
+      ],
+      "chat": {
+        "read": false,
+        "reply": false,
+        "relay": false
+      },
+      "restream_analytics": false,
+      "restream_title_updates": false,
+      "sources": [
+        "R12945355"
+      ]
+    }
+  ],
+  "delivery_and_operations": [
+    {
+      "id": "embed-player",
+      "name": "Website Embed Player",
+      "facts": [
+        "Business/custom Enterprise; Business includes 1,000 concurrent viewers aggregated across embedded sites.",
+        "One active Embed Player channel per stream. Persistent channel iframe; no chat, viewer analytics supported.",
+        "Documented guidance: at most 12,000 Kbps, 30 fps, keyframe interval no less than 2 seconds; latency up to 60 seconds.",
+        "Guide states 14-day maximum player stream duration; this does not guarantee the upstream encoder connection lasts that long."
+      ],
+      "first_checks": [
+        "Check enabled player channel and actual iframe.",
+        "Offline state before input and click-to-unmute are expected; a viewer-counter here excludes social-platform viewers."
+      ],
+      "sources": [
+        "R4996608"
+      ]
+    },
+    {
+      "id": "rtmp-pull",
+      "name": "RTMP Pull for production",
+      "facts": [
+        "Professional: 3 links; Business: 5; Enterprise: custom. Up to 10 active connections per link.",
+        "Pulls the account’s active feed for production or monitoring. Public website embedding is explicitly disallowed by the guide."
+      ],
+      "first_checks": [
+        "Check that the source account is live and use the pull link as a media input, not an ingest destination.",
+        "For a public website, use Embed Player rather than publishing a private pull link."
+      ],
+      "sources": [
+        "R1859385"
+      ]
+    },
+    {
+      "id": "pairs",
+      "name": "Guest channel pairing",
+      "facts": [
+        "Host requires paid plan. Each free guest can add up to 3 channels; paid guest limits follow their plan. Up to 20 guests / 100 paired channels.",
+        "Supported for Studio and encoder streams, including scheduled; not pre-recorded or webinars.",
+        "Supported incoming chats can appear as Paired; host replies only to own channels; no relay between host and guest channels.",
+        "Turning off the invitation toggle disables the link, not previously paired channels. Studio dual output sends paired channels primary landscape."
+      ],
+      "first_checks": [
+        "Inspect host and guest activation separately. A host-disabled channel can still appear on to the guest."
+      ],
+      "sources": [
+        "R8540565",
+        "R9267506",
+        "R13626308",
+        "R16033686",
+        "R13141556"
+      ]
+    },
+    {
+      "id": "transcoding",
+      "name": "Per-destination transcoding",
+      "facts": [
+        "Separate hourly add-on, not included in a base plan; unavailable for Organizations per current guide.",
+        "Documented configurable maxima: 1920×1080, 60 fps, video 6,000 Kbps, audio 320 Kbps.",
+        "Hours are consumed per destination; guide says exhaustion disconnects the stream. Added delay is reported around 2–3 seconds, not a guarantee."
+      ],
+      "first_checks": [
+        "For incompatible destinations, verify which fields can actually be changed and enough remaining hours.",
+        "Do not equate rotate with a separately composed portrait layout or promise sample-rate conversion from bitrate controls alone."
+      ],
+      "sources": [
+        "R760428"
+      ]
+    },
+    {
+      "id": "disconnect-protection",
+      "name": "Disconnect protection",
+      "facts": [
+        "Business/custom Enterprise; RTMP/SRT encoder streams. Configure before live.",
+        "Fallback windows: 5, 15 or 30 minutes. Business uses default video; custom video via Enterprise.",
+        "Fallback loops until recovery/window expiry; when expired, destinations end. Trigger is automatic source loss."
+      ],
+      "first_checks": [
+        "Inspect whether protection was enabled and whether its time window has elapsed.",
+        "Do not promise manual triggering, failover alerts or exported failover metrics."
+      ],
+      "sources": [
+        "R13624390"
+      ]
+    },
+    {
+      "id": "backup",
+      "name": "Backup encoder",
+      "facts": [
+        "Custom Enterprise; two distinct encoders, preferably independent networks; RTMP or SRT.",
+        "RTMP uses the supplied primary/backup keys; SRT uses two supplied URLs. Not available for browser Studio.",
+        "Monitor shows primary/backup source identity. Guide does not guarantee continuous operation beyond 24 hours; custom long-duration needs must be confirmed."
+      ],
+      "first_checks": [
+        "Inspect active-source indicator and independent backup feed.",
+        "A long destination duration cap is not an uptime guarantee."
+      ],
+      "sources": [
+        "R2014602"
+      ]
+    },
+    {
+      "id": "proxy",
+      "name": "Destination proxy",
+      "facts": [
+        "Custom Enterprise; channel-level route setting applies across stream drafts."
+      ],
+      "first_checks": [
+        "Use only for a supported destination-route issue after locating the first failing hop; it is not a fix for local render lag."
+      ],
+      "sources": [
+        "R2947187"
+      ]
+    },
+    {
+      "id": "plans",
+      "name": "Simultaneous-channel and plan limits",
+      "facts": [
+        "Public channel caps: Free 2, Standard 3, Professional 5, Business 8; Enterprise negotiated.",
+        "Connected channels and simultaneously active channels are different counts. Facebook Pages and Custom RTMP need paid access.",
+        "Professional adds Studio 1080p and dual format. Business adds embed and Studio RTMP source. Add-ons and provider subscriptions are separate."
+      ],
+      "first_checks": [
+        "Check the actual account’s plan, activated channels and add-on balances.",
+        "Do not infer a plan from a missing button alone or treat a marketing price as an account quote."
+      ],
+      "sources": [
+        "R9099960",
+        "S4d1b5e04b2"
+      ]
+    }
+  ],
+  "account_controls": {
+    "mcp_endpoint": "https://mcp.restream.io/mcp",
+    "documented_tool_count": 26,
+    "useful_reads": [
+      "list_channels",
+      "check_channel_api_access",
+      "get_event",
+      "list_event_destinations",
+      "check_event_channels_activation"
+    ],
+    "limits": [
+      "No local OBS/device inspection, stream-key retrieval or RTMP/SRT credential entry.",
+      "Published MCP tools do not expose detailed ingest health. UI/public API status and bitrate/FPS are separate capabilities; discover actual authorized schemas.",
+      "Viewer/message analytics are not transport diagnostics."
+    ],
+    "sources": [
+      "Sa0a312bde2",
+      "R9943983"
+    ]
+  },
+  "chat_matrix": [
+    {
+      "destination": "Amazon Live",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R6959322"
+      ]
+    },
+    {
+      "destination": "Instagram",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R6379108",
+        "Seabc5c5f44"
+      ]
+    },
+    {
+      "destination": "Kick",
+      "read": true,
+      "reply": true,
+      "relay": true,
+      "sources": [
+        "R7183157",
+        "R2379624"
+      ]
+    },
+    {
+      "destination": "LinkedIn",
+      "read": true,
+      "reply": true,
+      "relay": false,
+      "caveat": "Replies via Restream may require viewers to refresh LinkedIn; an older FAQ still says read-only.",
+      "sources": [
+        "R2897856",
+        "S1925d041c9",
+        "Sdf4b11c1c0",
+        "R2379624"
+      ]
+    },
+    {
+      "destination": "Mixcloud",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R4179344"
+      ]
+    },
+    {
+      "destination": "Mux",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R11464405"
+      ]
+    },
+    {
+      "destination": "Rumble",
+      "read": true,
+      "reply": true,
+      "relay": false,
+      "sources": [
+        "R9322994",
+        "R2379624"
+      ]
+    },
+    {
+      "destination": "Substack",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R11421657"
+      ]
+    },
+    {
+      "destination": "Telegram",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R6061986"
+      ]
+    },
+    {
+      "destination": "TikTok",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R6721574",
+        "R2379624"
+      ]
+    },
+    {
+      "destination": "Twitch",
+      "read": true,
+      "reply": true,
+      "relay": true,
+      "sources": [
+        "R68754",
+        "Seca53c3b06",
+        "S6994791d7e",
+        "R2379624"
+      ]
+    },
+    {
+      "destination": "X",
+      "read": true,
+      "reply": true,
+      "relay": false,
+      "sources": [
+        "R5594822",
+        "R2379624"
+      ]
+    },
+    {
+      "destination": "YouTube",
+      "read": true,
+      "reply": true,
+      "relay": true,
+      "sources": [
+        "R3703373",
+        "Sd05ac6e206",
+        "R2379624"
+      ]
+    },
+    {
+      "destination": "Vimeo",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R4556595",
+        "R369436"
+      ]
+    },
+    {
+      "destination": "Amazon IVS",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R6136293",
+        "R369436"
+      ]
+    },
+    {
+      "destination": "Zoom",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R11174538",
+        "R369436"
+      ]
+    },
+    {
+      "destination": "Slack",
+      "read": true,
+      "reply": true,
+      "relay": null,
+      "sources": [
+        "R16012759",
+        "R16033686"
+      ]
+    },
+    {
+      "destination": "Microsoft Teams",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R4118493",
+        "S9d4fb2569c",
+        "Sc332284e6e",
+        "R369436"
+      ]
+    },
+    {
+      "destination": "Facebook Profile",
+      "read": true,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R2251873",
+        "R2379624"
+      ]
+    },
+    {
+      "destination": "Facebook Page",
+      "read": true,
+      "reply": true,
+      "relay": false,
+      "sources": [
+        "R6158091",
+        "R2379624"
+      ]
+    },
+    {
+      "destination": "Facebook Group",
+      "read": false,
+      "reply": false,
+      "relay": false,
+      "sources": [
+        "R4798898"
+      ]
+    },
+    {
+      "destination": "Discord (chat integration only)",
+      "read": true,
+      "reply": true,
+      "relay": true,
+      "sources": [
+        "R2379624",
+        "R2676956"
+      ]
+    }
+  ],
+  "numeric_examples": {
+    "studio_output": [
+      {
+        "width": 1280,
+        "height": 720,
+        "fps": 30,
+        "video_bitrate_kbps": 4000
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "video_bitrate_kbps": 5000
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "fps": 30,
+        "video_bitrate_kbps": 6000
+      }
+    ],
+    "studio_output_sources": [
+      "R8540516",
+      "R8544578"
+    ],
+    "youtube_h264_recommended_kbps": {
+      "720p30_or_below": 4000,
+      "720p60": 6000,
+      "1080p30": 10000,
+      "1080p60": 12000,
+      "1440p30": 15000,
+      "1440p60": 24000,
+      "2160p30": 30000,
+      "2160p60": 35000
+    },
+    "youtube_sources": [
+      "Sd05ac6e206"
+    ],
+    "documented_audio_conflict": {
+      "dailymotion_minimum_kbps": 192,
+      "linkedin_maximum_kbps": 128,
+      "single_passthrough_value_satisfies_both": false,
+      "scope": "Comparison of published guidance, not proof every nonconforming stream is rejected. Sample-rate guidance also differs (44.1 vs 48 kHz).",
+      "sources": [
+        "R73033",
+        "R2897856",
+        "S95bc45e2a3",
+        "S1925d041c9"
+      ]
+    }
+  },
+  "documentation_conflicts": [
+    {
+      "id": "teams-retirement",
+      "title": "Legacy Teams Live Events wizard",
+      "decision": "For a new event, use current Teams RTMP-In policy and provider setup. The old creation wizard is retired; pre-June-30-2026 scheduled events have a documented exception through February 28, 2027.",
+      "sources": [
+        "R4118493",
+        "S9d4fb2569c",
+        "Sc332284e6e"
+      ]
+    },
+    {
+      "id": "youtube-codec-table",
+      "title": "YouTube bitrate columns have different codecs",
+      "decision": "The Restream general table labels H.264 near ranges matching YouTube AV1/H.265. Use the owner’s codec-specific table; do not describe every range as H.264.",
+      "sources": [
+        "R73108",
+        "Sd05ac6e206"
+      ]
+    },
+    {
+      "id": "whip-faq",
+      "title": "Generic encoder FAQ omits WHIP",
+      "decision": "The dedicated WHIP guide establishes beta WHIP input; do not repeat the generic only-RTMP-and-SRT statement.",
+      "sources": [
+        "R6505602",
+        "R11780279"
+      ]
+    },
+    {
+      "id": "global-bitrate",
+      "title": "Generic 15 Mbps and pass-through claims",
+      "decision": "Generic encoder examples are not global hard caps. Explicit transcoding, protocol conversion and Instagram adaptation are exceptions to broad pass-through language.",
+      "sources": [
+        "R73108",
+        "S4d1b5e04b2",
+        "R760428",
+        "R11780279",
+        "R9943983",
+        "R6379108"
+      ]
+    },
+    {
+      "id": "srt-output-controls",
+      "title": "SRT output passphrase versus no per-output controls",
+      "decision": "The custom-SRT form mentions Stream ID/passphrase, while the SRT FAQ denies per-output latency/encryption settings. Preserve the disagreement; verify supported output behavior before promising encryption controls.",
+      "sources": [
+        "R10577576",
+        "R9943983"
+      ]
+    },
+    {
+      "id": "linkedin-chat",
+      "title": "LinkedIn reply support versus older read-only FAQ",
+      "decision": "Current capability tables say read/reply, with a viewer-refresh caveat. A read-only state can still require checking the actual connection; the old FAQ is not sufficient proof of universal lack of replies.",
+      "sources": [
+        "R9297258",
+        "R2379624"
+      ]
+    },
+    {
+      "id": "mixcloud-units",
+      "title": "CBR incorrectly labelled sample rate",
+      "decision": "CBR is a rate-control mode, not a Hz sample rate. Keep sample-rate requirements unknown until verified with the provider.",
+      "sources": [
+        "R4179344"
+      ]
+    },
+    {
+      "id": "twitch-path",
+      "title": "Standard Twitch versus Enhanced Broadcasting",
+      "decision": "Do not treat a standard RTMP recommendation as the cap for direct Enhanced Broadcasting, or assume enhanced codecs and resolutions are supported through Restream.",
+      "sources": [
+        "R68754",
+        "Seca53c3b06",
+        "S6994791d7e",
+        "R11780279"
+      ]
+    },
+    {
+      "id": "duration-scope",
+      "title": "Upload, live, recording and continuity limits differ",
+      "decision": "A 24-hour playlist cap, 40-hour loop cap, 14-day player cap, recording length and encoder maintenance window describe different parts of the route. Use the applicable smallest limit without inventing a universal uptime guarantee.",
+      "sources": [
+        "R6158091",
+        "R13626771",
+        "R6980009",
+        "R2014602",
+        "R4996608",
+        "R5028560"
+      ]
+    },
+    {
+      "id": "latency-scope",
+      "title": "Latency promises are route-dependent",
+      "decision": "General under-two-second claims do not override documented transcoding delay or up-to-60-second player latency. Measure the actual path; audio/video offset is a separate issue.",
+      "sources": [
+        "S4d1b5e04b2",
+        "R760428",
+        "R4996608",
+        "R11780279"
+      ]
+    },
+    {
+      "id": "encoder-overload",
+      "title": "Generic slower-preset advice can worsen load",
+      "decision": "The quality article groups a slower encoder preset with lowering load. For x264, slower generally costs more processing; use the OBS performance playbook and measure the actual encoder instead of copying that phrase.",
+      "sources": [
+        "R3928288"
+      ]
+    },
+    {
+      "id": "catalog-redirects",
+      "title": "Ten channel links lack specific setup evidence",
+      "decision": "Every checked catalog-only integration URL redirected to the generic streaming-method guide. Record current activation, eligibility and numerical encoder limits as unverified; do not fabricate them.",
+      "sources": [
+        "R872029",
+        "Sa56da4b789",
+        "Sc71e25b24f",
+        "S26bd6c11b6",
+        "S818242a5f3",
+        "S1fd43af384",
+        "S8db6d9dcf9",
+        "Sbe8e1b2167",
+        "Scd13e8c855",
+        "S1133956734",
+        "S4f87d1c700"
+      ]
+    }
+  ],
+  "sources": {
+    "R6959322": {
+      "url": "https://support.restream.io/en/articles/6959322-stream-to-amazon-live",
+      "title": "Stream to Amazon Live",
+      "retrieved_at": "2026-09-07T04:03:13.700687+00:00",
+      "final_url": "https://support.restream.io/en/articles/6959322-stream-to-amazon-live",
+      "content_sha256": "1644f56e2a933080f39d4d420fd3c4fa4a8792a901d4ced47e2af6410c6dcfff",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R73033": {
+      "url": "https://support.restream.io/en/articles/73033-stream-to-dailymotion",
+      "title": "Stream to Dailymotion",
+      "retrieved_at": "2026-09-07T04:05:14.989255+00:00",
+      "final_url": "https://support.restream.io/en/articles/73033-stream-to-dailymotion",
+      "content_sha256": "bab09ee72f5f951564dd05dad302ec2ed77651d87907776f36ba24591454cdb1",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S95bc45e2a3": {
+      "url": "https://faq.dailymotion.com/hc/en-us/articles/203655666-Encoding-parameters",
+      "title": "https://faq.dailymotion.com/hc/en-us/articles/203655666-Encoding-parameters",
+      "retrieved_at": null,
+      "final_url": null,
+      "content_sha256": null,
+      "access": "web_search_verified",
+      "http_error": "HTTP Error 403: Forbidden"
+    },
+    "R2251873": {
+      "url": "https://support.restream.io/en/articles/2251873-stream-to-a-facebook-profile",
+      "title": "Stream to a Facebook Profile",
+      "retrieved_at": "2026-09-07T04:01:20.301268+00:00",
+      "final_url": "https://support.restream.io/en/articles/2251873-stream-to-a-facebook-profile",
+      "content_sha256": "0dc103105a0b264329fcc0967311f80a387de335afb965b8615791ec49efc9de",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2379624": {
+      "url": "https://support.restream.io/en/articles/2379624-what-is-restream-chat",
+      "title": "What is Restream Chat?",
+      "retrieved_at": "2026-09-07T04:01:32.737705+00:00",
+      "final_url": "https://support.restream.io/en/articles/2379624-what-is-restream-chat",
+      "content_sha256": "fcbb3bf325e3e35a3656d651b709fcd7f7338ea78e3c82da360272d1dd9eec1d",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R6158091": {
+      "url": "https://support.restream.io/en/articles/6158091-stream-to-a-facebook-page",
+      "title": "Stream to a Facebook Page",
+      "retrieved_at": "2026-09-07T04:00:57.011685+00:00",
+      "final_url": "https://support.restream.io/en/articles/6158091-stream-to-a-facebook-page",
+      "content_sha256": "8985ebee0df43060d684c6f6fc3aff9b8a587e493a536c251a7fabc2b83f8a32",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R4798898": {
+      "url": "https://support.restream.io/en/articles/4798898-stream-to-a-facebook-group",
+      "title": "Stream to a Facebook Group",
+      "retrieved_at": "2026-09-07T04:03:44.862160+00:00",
+      "final_url": "https://support.restream.io/en/articles/4798898-stream-to-a-facebook-group",
+      "content_sha256": "743c96e789e923942266d961b9513e97b9cdb22e7905471bfcb1a74e09f2c172",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R1553568": {
+      "url": "https://support.restream.io/en/articles/1553568-stream-to-fc2-live",
+      "title": "Stream to FC2 Live",
+      "retrieved_at": "2026-09-07T04:03:06.748294+00:00",
+      "final_url": "https://support.restream.io/en/articles/1553568-stream-to-fc2-live",
+      "content_sha256": "87b7ad3679b0ef04b47548511884457ad09193c6640fe5986e63f0932c1912e3",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R6379108": {
+      "url": "https://support.restream.io/en/articles/6379108-stream-to-instagram",
+      "title": "Stream to Instagram",
+      "retrieved_at": "2026-09-07T04:05:42.094349+00:00",
+      "final_url": "https://support.restream.io/en/articles/6379108-stream-to-instagram",
+      "content_sha256": "b8701e174ef0871f61017123aea22cc1e8bdd63799d422c35f68898c6c463050",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Seabc5c5f44": {
+      "url": "https://help.instagram.com/292478487812558/",
+      "title": "Help Center",
+      "retrieved_at": "2026-09-07T04:06:04.389645+00:00",
+      "final_url": "https://help.instagram.com/292478487812558/",
+      "content_sha256": "63d90f74836b09dfab1c8f62eef805113242e558056c84d9c44958067ef32bcc",
+      "access": "web_search_verified; direct fetch returned a limited help portal",
+      "http_error": null
+    },
+    "R7183157": {
+      "url": "https://support.restream.io/en/articles/7183157-stream-to-kick",
+      "title": "Stream to Kick",
+      "retrieved_at": "2026-09-07T04:02:53.404218+00:00",
+      "final_url": "https://support.restream.io/en/articles/7183157-stream-to-kick",
+      "content_sha256": "66d079959e991d8adea9634b4fcf20a389f704b9d8e2026414a3ad864ef789b4",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2897856": {
+      "url": "https://support.restream.io/en/articles/2897856-stream-to-linkedin",
+      "title": "Stream to LinkedIn",
+      "retrieved_at": "2026-09-07T04:06:13.249175+00:00",
+      "final_url": "https://support.restream.io/en/articles/2897856-stream-to-linkedin",
+      "content_sha256": "44521f249c9df86ad7aa0ac3cbb6ea3cfba62ef93c37287463a49b285bf75118",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S1925d041c9": {
+      "url": "https://www.linkedin.com/help/billing/answer/a567498",
+      "title": "LinkedIn Live Video encoder settings",
+      "retrieved_at": "2026-09-07T04:14:36.398963+00:00",
+      "final_url": "https://www.linkedin.com/help/billing/answer/a567498",
+      "content_sha256": "304d9415af97da98300087744af088c886ede57a9bf3c25ea39068739f88302b",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Sdf4b11c1c0": {
+      "url": "https://www.linkedin.com/help/linkedin/answer/a554240",
+      "title": "LinkedIn Live Overview",
+      "retrieved_at": "2026-09-07T04:14:36.344447+00:00",
+      "final_url": "https://www.linkedin.com/help/linkedin/answer/a554240",
+      "content_sha256": "409ac955a72137baf4b759683c829c5786ff12d8b0139a6fdbc1c02b1c3bc001",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R4179344": {
+      "url": "https://support.restream.io/en/articles/4179344-stream-to-mixcloud",
+      "title": "Stream to Mixcloud",
+      "retrieved_at": "2026-09-07T04:06:01.487784+00:00",
+      "final_url": "https://support.restream.io/en/articles/4179344-stream-to-mixcloud",
+      "content_sha256": "38d54c5512c45ce469e9f577294df5a8fb6fae76f4a988bb46844e2716900fe6",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R11464405": {
+      "url": "https://support.restream.io/en/articles/11464405-stream-to-mux",
+      "title": "Stream to Mux",
+      "retrieved_at": "2026-09-07T04:06:18.488420+00:00",
+      "final_url": "https://support.restream.io/en/articles/11464405-stream-to-mux",
+      "content_sha256": "2de6f2ae2b97e26a290972b999077c2946f2aa396b022d3ea4398e7d232d50d9",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R3112026": {
+      "url": "https://support.restream.io/en/articles/3112026-stream-to-nimo-tv",
+      "title": "Stream to Nimo TV",
+      "retrieved_at": "2026-09-07T04:06:31.048630+00:00",
+      "final_url": "https://support.restream.io/en/articles/3112026-stream-to-nimo-tv",
+      "content_sha256": "0a312e655d18d8f16bbc1adb68e893f0c039b7a0cbe6239f010d13d2cf8db4b4",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R73178": {
+      "url": "https://support.restream.io/en/articles/73178-stream-to-picarto",
+      "title": "Stream to Picarto",
+      "retrieved_at": "2026-09-07T04:00:31.364966+00:00",
+      "final_url": "https://support.restream.io/en/articles/73178-stream-to-picarto",
+      "content_sha256": "2fbf3d3dda83fed6d1c7bb68a877841c3fe8f9c1307b5be39d7063f167473b9c",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R9322994": {
+      "url": "https://support.restream.io/en/articles/9322994-stream-to-rumble",
+      "title": "Stream to Rumble",
+      "retrieved_at": "2026-09-07T04:00:18.767790+00:00",
+      "final_url": "https://support.restream.io/en/articles/9322994-stream-to-rumble",
+      "content_sha256": "8272b30c4171282cfa678786881dc173d57a0314ddf6329d97462093db143d5f",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R1846325": {
+      "url": "https://support.restream.io/en/articles/1846325-stream-to-steam",
+      "title": "Stream to Steam",
+      "retrieved_at": "2026-09-07T04:03:32.505704+00:00",
+      "final_url": "https://support.restream.io/en/articles/1846325-stream-to-steam",
+      "content_sha256": "fbf212c92ce1e08a52b93e75fb7172500003b475dc88bd3f4836c18aa64ae761",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R11421657": {
+      "url": "https://support.restream.io/en/articles/11421657-stream-to-substack",
+      "title": "Stream to Substack",
+      "retrieved_at": "2026-09-07T04:02:40.482056+00:00",
+      "final_url": "https://support.restream.io/en/articles/11421657-stream-to-substack",
+      "content_sha256": "b83fb251dfb8ea8d2a8f8e38ff220695b587bc46f554493c430086fb39764bf0",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R6061986": {
+      "url": "https://support.restream.io/en/articles/6061986-stream-to-telegram",
+      "title": "Stream to Telegram",
+      "retrieved_at": "2026-09-07T03:59:58.526544+00:00",
+      "final_url": "https://support.restream.io/en/articles/6061986-stream-to-telegram",
+      "content_sha256": "6c2e74bebdc6c766eecd1bc115edb481f789a8e702d9d67fa4cf5a6830e80984",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R6721574": {
+      "url": "https://support.restream.io/en/articles/6721574-stream-to-tiktok",
+      "title": "Stream to TikTok",
+      "retrieved_at": "2026-09-07T04:06:13.182016+00:00",
+      "final_url": "https://support.restream.io/en/articles/6721574-stream-to-tiktok",
+      "content_sha256": "8ae81099783aeb8cbc4f6801b6ce9b6321c75777627956feb45214e80fd9d03f",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R68754": {
+      "url": "https://support.restream.io/en/articles/68754-stream-to-twitch",
+      "title": "Stream to Twitch",
+      "retrieved_at": "2026-09-07T04:04:16.957671+00:00",
+      "final_url": "https://support.restream.io/en/articles/68754-stream-to-twitch",
+      "content_sha256": "b4878b3b71d2c20b3ad19ead6f9372906079fbb3e45f3d81c2f0d40488ff11af",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Seca53c3b06": {
+      "url": "https://help.twitch.tv/s/article/broadcasting-guidelines",
+      "title": "Twitch Help Portal",
+      "retrieved_at": "2026-09-07T04:05:56.899813+00:00",
+      "final_url": "https://help.twitch.tv/s/article/broadcasting-guidelines?language=en_US",
+      "content_sha256": "fefd480cbb930d6cc08df8cff9e238c6c42dbee2ee1272f5b855b530d5214054",
+      "access": "web_search_verified; direct fetch returned a limited help portal",
+      "http_error": null
+    },
+    "S6994791d7e": {
+      "url": "https://help.twitch.tv/s/article/stream-quality",
+      "title": "Twitch Help Portal",
+      "retrieved_at": "2026-09-07T04:05:56.800289+00:00",
+      "final_url": "https://help.twitch.tv/s/article/stream-quality?language=en_US",
+      "content_sha256": "fefd480cbb930d6cc08df8cff9e238c6c42dbee2ee1272f5b855b530d5214054",
+      "access": "web_search_verified; direct fetch returned a limited help portal",
+      "http_error": null
+    },
+    "R73107": {
+      "url": "https://support.restream.io/en/articles/73107-stream-to-vaughn-live",
+      "title": "Stream to Vaughn Live",
+      "retrieved_at": "2026-09-07T04:00:11.770305+00:00",
+      "final_url": "https://support.restream.io/en/articles/73107-stream-to-vaughn-live",
+      "content_sha256": "cce4bd1eaaf3b20d9e572d189c1ed5d4ab50e8543ff5e3edebb0cd3993aaa271",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R5594822": {
+      "url": "https://support.restream.io/en/articles/5594822-stream-to-x",
+      "title": "Stream to X",
+      "retrieved_at": "2026-09-07T04:04:36.482494+00:00",
+      "final_url": "https://support.restream.io/en/articles/5594822-stream-to-x",
+      "content_sha256": "1068333ce5c7d562e430331a63bbf3d4115aae7e2a1b9dc568174552a5cea16e",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R3703373": {
+      "url": "https://support.restream.io/en/articles/3703373-stream-to-youtube",
+      "title": "Stream to YouTube",
+      "retrieved_at": "2026-09-07T04:00:44.307509+00:00",
+      "final_url": "https://support.restream.io/en/articles/3703373-stream-to-youtube",
+      "content_sha256": "b8b7736deb4cb38e08c63bcd762bb21bca846669d23d651712fb6aef655b7ef7",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Sd05ac6e206": {
+      "url": "https://support.google.com/youtube/answer/2853702?hl=en",
+      "title": "Choose live encoder settings, bitrates, and resolutions",
+      "retrieved_at": "2026-09-07T04:06:02.981212+00:00",
+      "final_url": "https://support.google.com/youtube/answer/2853702?hl=en",
+      "content_sha256": "b90d7567001341a641a87aeed7747330f349613376030d7a61bb834f72a7b572",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R872029": {
+      "url": "https://support.restream.io/en/articles/872029-supported-social-platforms",
+      "title": "Supported Social Platforms",
+      "retrieved_at": "2026-09-07T03:59:52.499309+00:00",
+      "final_url": "https://support.restream.io/en/articles/872029-supported-social-platforms",
+      "content_sha256": "850e987e3c4d58545007d4a280948ba919fb1e1d6edbfdb5d727b09fd9106430",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Sa56da4b789": {
+      "url": "https://restream.io/integrations/bilibili/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:55.790676+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "d442c9a6b99a3c4c8a349140530bc1b1b45cd0e30225ce6cae8e12e39c705956",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Sc71e25b24f": {
+      "url": "https://restream.io/integrations/breakerstv/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:42.493356+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "12389c146e0e63b983c2511ccd9e03324449b2dbc1efe2911afc995d2e5af184",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S26bd6c11b6": {
+      "url": "https://restream.io/integrations/douyu/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:42.423597+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "236670558211e9ea60d6fff7a305f747bab9a51bf4d5099cdb44d0bfe2e95317",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S818242a5f3": {
+      "url": "https://restream.io/integrations/huya/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:42.369968+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "ba334193b114b46c45dd9574dc0d0c3847f48bcbc0d3388b5c44c65920bfa328",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S1fd43af384": {
+      "url": "https://restream.io/integrations/kakaotv/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:42.403039+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "cab8be181d3479b17f60d054a758d553700081fe33bb61d372d3283b69af012d",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S8db6d9dcf9": {
+      "url": "https://restream.io/integrations/major-league-gaming/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:30.659388+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "603549d97f0adab139b5364df6e1bb00b3bc10dbd8f584a78e07f58b4c412057",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Sbe8e1b2167": {
+      "url": "https://restream.io/integrations/naver-tv/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:30.726564+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "a696b611024242e9f43a4ebbb1951006904465ce30b88aa696132de66d3780d3",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Scd13e8c855": {
+      "url": "https://restream.io/integrations/nonolive/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:31.054647+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "e7401f55f4e9bb903eb3eccb5f1a73f8c7c0cc4ef0536986415a93ae6ef9692b",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S1133956734": {
+      "url": "https://restream.io/integrations/soop/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:55.599893+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "7374f00ccf6e3563c65f702b6077fe8d517b0a1ec1a14edabe80ba71e008577c",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S4f87d1c700": {
+      "url": "https://restream.io/integrations/zhanqi-tv/",
+      "title": "Choose how to go live with Restream Restream Studio Streaming Encoders Pre-recorded Streams Webinar",
+      "retrieved_at": "2026-09-07T04:05:30.692300+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "dcc610dbc4e40a4d27ecf7ce5cd67bd50eda5206b4d82b44a324171031157c39",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R4556595": {
+      "url": "https://support.restream.io/en/articles/4556595-stream-to-vimeo",
+      "title": "Stream to Vimeo",
+      "retrieved_at": "2026-09-07T04:01:06.687019+00:00",
+      "final_url": "https://support.restream.io/en/articles/4556595-stream-to-vimeo",
+      "content_sha256": "5cfbce64e5a5942c3346827e30fa58a2445c5530f1fe020e2d584030a568bfed",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R369436": {
+      "url": "https://support.restream.io/en/articles/369436-stream-to-a-custom-rtmp-channel",
+      "title": "Stream to a Custom RTMP channel",
+      "retrieved_at": "2026-09-07T04:02:10.518294+00:00",
+      "final_url": "https://support.restream.io/en/articles/369436-stream-to-a-custom-rtmp-channel",
+      "content_sha256": "8e7d51fcfe591ea385d22151ad5a1899a8d58acce61d15f6d163fcf89eb28301",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R6136293": {
+      "url": "https://support.restream.io/en/articles/6136293-stream-to-amazon-ivs",
+      "title": "Stream to Amazon IVS",
+      "retrieved_at": "2026-09-07T04:04:23.001247+00:00",
+      "final_url": "https://support.restream.io/en/articles/6136293-stream-to-amazon-ivs",
+      "content_sha256": "3f374002c2dc7454bf01cb3b0780bda3f6d103ee55133a1d1a844a9befae2672",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R15398147": {
+      "url": "https://support.restream.io/en/articles/15398147-stream-to-patreon",
+      "title": "Stream to Patreon",
+      "retrieved_at": "2026-09-07T04:03:00.106169+00:00",
+      "final_url": "https://support.restream.io/en/articles/15398147-stream-to-patreon",
+      "content_sha256": "cd1212c309f51e34416c1da6b4cc9813f02f5b9a74a844370f805a36a35a96d7",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R11174538": {
+      "url": "https://support.restream.io/en/articles/11174538-stream-to-zoom",
+      "title": "Stream to Zoom",
+      "retrieved_at": "2026-09-07T04:06:24.361335+00:00",
+      "final_url": "https://support.restream.io/en/articles/11174538-stream-to-zoom",
+      "content_sha256": "5c25d9a6e58ba3b257a735daed74bfa187b704c778ce696b698b812bbf498bf5",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R16012759": {
+      "url": "https://support.restream.io/en/articles/16012759-stream-to-slack",
+      "title": "Stream to Slack",
+      "retrieved_at": "2026-09-07T04:01:27.007407+00:00",
+      "final_url": "https://support.restream.io/en/articles/16012759-stream-to-slack",
+      "content_sha256": "d9bc095cdc836b932ba96b160d63097c3b59c8ab175d00ec2bcc5f4ed7fb87a0",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R16033686": {
+      "url": "https://support.restream.io/en/articles/16033686-host-live-webinars",
+      "title": "Host live webinars",
+      "retrieved_at": "2026-09-07T04:03:51.105619+00:00",
+      "final_url": "https://support.restream.io/en/articles/16033686-host-live-webinars",
+      "content_sha256": "6e29278366eead20dc0cd70cf931f416579a40a4d11587689be86542fe3bcd62",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R4118493": {
+      "url": "https://support.restream.io/en/articles/4118493-stream-to-microsoft-teams",
+      "title": "Stream to Microsoft Teams",
+      "retrieved_at": "2026-09-07T04:00:56.920539+00:00",
+      "final_url": "https://support.restream.io/en/articles/4118493-stream-to-microsoft-teams",
+      "content_sha256": "412d217c03cef73ae1cee0063805f6e42aefabdc349ce035a9e2062b0d049070",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S9d4fb2569c": {
+      "url": "https://learn.microsoft.com/en-us/microsoftteams/teams-live-events/plan-for-teams-live-events",
+      "title": "Plan for live events in Microsoft Teams",
+      "retrieved_at": "2026-09-07T04:05:47.956865+00:00",
+      "final_url": "https://learn.microsoft.com/en-us/microsoftteams/teams-live-events/plan-for-teams-live-events",
+      "content_sha256": "2b0f4cb9046d58d1e43715df2b26eefcd55fdd19b091125b4fcde1359ff57298",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Sc332284e6e": {
+      "url": "https://learn.microsoft.com/en-us/microsoftteams/meetings-rtmp-in",
+      "title": "Manage RTMP-In for Teams meetings and events",
+      "retrieved_at": "2026-09-07T04:14:32.963444+00:00",
+      "final_url": "https://learn.microsoft.com/en-us/microsoftteams/meetings-rtmp-in",
+      "content_sha256": "d4cdcfa029ed6c08af17968c821742506f490060c1dab8d068e2a790c7f15df2",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R9090939": {
+      "url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "title": "Choose how to go live with Restream",
+      "retrieved_at": "2026-09-07T03:59:46.217222+00:00",
+      "final_url": "https://support.restream.io/en/articles/9090939-choose-how-to-go-live-with-restream",
+      "content_sha256": "d2204ba95922872bd580b47198cc33c30d856966c2728e412b9df4a21c4040f2",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R8540516": {
+      "url": "https://support.restream.io/en/articles/8540516-go-live-with-studio",
+      "title": "Go live with Studio",
+      "retrieved_at": "2026-09-07T04:03:06.754493+00:00",
+      "final_url": "https://support.restream.io/en/articles/8540516-go-live-with-studio",
+      "content_sha256": "ed89b16654628ae1c6e6280e241898f7352e59606e2321b519946aef21ebcf02",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R8544578": {
+      "url": "https://support.restream.io/en/articles/8544578-adjust-your-stream-settings-in-studio",
+      "title": "Adjust your stream settings in Studio",
+      "retrieved_at": "2026-09-07T04:01:32.703735+00:00",
+      "final_url": "https://support.restream.io/en/articles/8544578-adjust-your-stream-settings-in-studio",
+      "content_sha256": "1f660fb0e0ec749c0ca4ea15f1009ef10b9013acf13017a5906788dae931e526",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R4362617": {
+      "url": "https://support.restream.io/en/articles/4362617-i-have-issues-with-mobile-streaming",
+      "title": "I have issues with mobile streaming",
+      "retrieved_at": "2026-09-07T04:04:43.196160+00:00",
+      "final_url": "https://support.restream.io/en/articles/4362617-i-have-issues-with-mobile-streaming",
+      "content_sha256": "00a92cdd1ab1fe9a7e6dabaf1ef561c9d06ee21d1820dfd44e8bca1f4d0de30e",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R6505602": {
+      "url": "https://support.restream.io/en/articles/6505602-go-live-with-streaming-software",
+      "title": "Go live with streaming software",
+      "retrieved_at": "2026-09-07T04:01:06.826833+00:00",
+      "final_url": "https://support.restream.io/en/articles/6505602-go-live-with-streaming-software",
+      "content_sha256": "48fae30962a6b694f22902fceb9cd470256a7b4c4a25a6d01ed07c259c1182bf",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R73108": {
+      "url": "https://support.restream.io/en/articles/73108-best-settings-for-your-streaming-software",
+      "title": "Best settings for your streaming software",
+      "retrieved_at": "2026-09-07T03:59:46.270914+00:00",
+      "final_url": "https://support.restream.io/en/articles/73108-best-settings-for-your-streaming-software",
+      "content_sha256": "56259460e9f386dad5db32ee4c511667c53cb4902a146925b5228631fceff90c",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R9127638": {
+      "url": "https://support.restream.io/en/articles/9127638-does-multistreaming-require-extra-bandwidth",
+      "title": "Does multistreaming require extra bandwidth?",
+      "retrieved_at": "2026-09-07T04:05:22.241788+00:00",
+      "final_url": "https://support.restream.io/en/articles/9127638-does-multistreaming-require-extra-bandwidth",
+      "content_sha256": "838cde606bb285c5f730e990f693d283e11140e9e3369ae3ad22ffbdb39502bc",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R9330098": {
+      "url": "https://support.restream.io/en/articles/9330098-what-is-upload-stream",
+      "title": "What is Upload & Stream?",
+      "retrieved_at": "2026-09-07T04:01:27.052483+00:00",
+      "final_url": "https://support.restream.io/en/articles/9330098-what-is-upload-stream",
+      "content_sha256": "74d7e0ddac644a4dd4274bd244347bd46735eaea50ec7c840076b38278af5bbc",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2446063": {
+      "url": "https://support.restream.io/en/articles/2446063-requirements-for-pre-recorded-videos",
+      "title": "Requirements for pre-recorded videos",
+      "retrieved_at": "2026-09-07T03:59:46.283999+00:00",
+      "final_url": "https://support.restream.io/en/articles/2446063-requirements-for-pre-recorded-videos",
+      "content_sha256": "1545f9f86099838be8ede7c1a115a35e92908e071d2fcb06f168b6477043e8dc",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R13626308": {
+      "url": "https://support.restream.io/en/articles/13626308-schedule-your-video-as-a-pre-recorded-event",
+      "title": "Schedule your video as a pre-recorded event",
+      "retrieved_at": "2026-09-07T04:05:35.234297+00:00",
+      "final_url": "https://support.restream.io/en/articles/13626308-schedule-your-video-as-a-pre-recorded-event",
+      "content_sha256": "78c6cfd14abbaf577a4d531c0475ce4113fce415f6a919de3a22fa60d0ecb71b",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R6980009": {
+      "url": "https://support.restream.io/en/articles/6980009-loop-the-video-of-your-pre-recorded-stream",
+      "title": "Loop the video of your pre-recorded stream",
+      "retrieved_at": "2026-09-07T04:01:12.987483+00:00",
+      "final_url": "https://support.restream.io/en/articles/6980009-loop-the-video-of-your-pre-recorded-stream",
+      "content_sha256": "f0c29c079a4c628a4e54747555651db0921e69da2dccb0648ed254880e8610e2",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R111656": {
+      "url": "https://support.restream.io/en/articles/111656-connect-obs-to-restream",
+      "title": "Connect OBS to Restream",
+      "retrieved_at": "2026-09-07T04:02:53.355448+00:00",
+      "final_url": "https://support.restream.io/en/articles/111656-connect-obs-to-restream",
+      "content_sha256": "fe6f8d0062db3e8105ec2a7222c226b8078293263b1c18e7cef659d5fa49b7ec",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R8523770": {
+      "url": "https://support.restream.io/en/articles/8523770-encrypt-your-stream-with-rtmps",
+      "title": "Encrypt your stream with RTMPS",
+      "retrieved_at": "2026-09-07T04:01:12.871476+00:00",
+      "final_url": "https://support.restream.io/en/articles/8523770-encrypt-your-stream-with-rtmps",
+      "content_sha256": "90bbd9effe61d3afc24b9535e27067431d0f7937250ea3702f154a3cbb809191",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R9943983": {
+      "url": "https://support.restream.io/en/articles/9943983-how-to-stream-to-restream-using-srt",
+      "title": "How to stream to Restream using SRT",
+      "retrieved_at": "2026-09-07T03:59:46.352555+00:00",
+      "final_url": "https://support.restream.io/en/articles/9943983-how-to-stream-to-restream-using-srt",
+      "content_sha256": "6e333493283709c06a53275a094518debfaf4af42899b618a89b974e000d76cc",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R11780279": {
+      "url": "https://support.restream.io/en/articles/11780279-how-to-stream-to-restream-using-whip",
+      "title": "How to stream to Restream using WHIP",
+      "retrieved_at": "2026-09-07T04:00:25.138316+00:00",
+      "final_url": "https://support.restream.io/en/articles/11780279-how-to-stream-to-restream-using-whip",
+      "content_sha256": "1a56f32be73aaaedc6921634c6110e6b7d49f574f1a6985de98788ae92f93a6f",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R13626771": {
+      "url": "https://support.restream.io/en/articles/13626771-create-and-stream-a-playlist-of-videos",
+      "title": "Create and stream a playlist of videos",
+      "retrieved_at": "2026-09-07T04:05:22.267031+00:00",
+      "final_url": "https://support.restream.io/en/articles/13626771-create-and-stream-a-playlist-of-videos",
+      "content_sha256": "ce1c98d18619a3657d6d520c274e8a37856a24540e8c3490da3983a3189bf7e1",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R13141556": {
+      "url": "https://support.restream.io/en/articles/13141556-stream-vertical-and-horizontal-at-the-same-time-from-studio",
+      "title": "Stream vertical and horizontal at the same time from Studio",
+      "retrieved_at": "2026-09-07T04:03:26.318090+00:00",
+      "final_url": "https://support.restream.io/en/articles/13141556-stream-vertical-and-horizontal-at-the-same-time-from-studio",
+      "content_sha256": "bf558d770b48f4fa9662d7c7d9e1b191604a8fbc8879e9d84d2db736e9742fea",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R11730141": {
+      "url": "https://support.restream.io/en/articles/11730141-stream-vertical-and-horizontal-at-the-same-time-from-obs",
+      "title": "Stream vertical and horizontal at the same time from OBS",
+      "retrieved_at": "2026-09-07T04:06:01.532381+00:00",
+      "final_url": "https://support.restream.io/en/articles/11730141-stream-vertical-and-horizontal-at-the-same-time-from-obs",
+      "content_sha256": "0c10ba10f8cd825c213c67649510d09946c0cb650a1867e326b9f26e16c5f58d",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R8544194": {
+      "url": "https://support.restream.io/en/articles/8544194-add-your-encoder-s-feed-to-your-stream-in-studio",
+      "title": "Add your encoder's feed to your stream in Studio",
+      "retrieved_at": "2026-09-07T04:06:07.320880+00:00",
+      "final_url": "https://support.restream.io/en/articles/8544194-add-your-encoder-s-feed-to-your-stream-in-studio",
+      "content_sha256": "7fd1b3b6faf64c2adcea37e1217e289736987fa8c7f8d23c2c0127002562ac2d",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R4956628": {
+      "url": "https://support.restream.io/en/articles/4956628-pull-a-zoom-call-in-studio",
+      "title": "Pull a Zoom call in Studio",
+      "retrieved_at": "2026-09-07T04:03:51.181331+00:00",
+      "final_url": "https://support.restream.io/en/articles/4956628-pull-a-zoom-call-in-studio",
+      "content_sha256": "89767a0ca82e591646ef46a3657c79b04ab575971c152a53b0cac8838055c1bd",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R3314278": {
+      "url": "https://support.restream.io/en/articles/3314278-connect-zoom-to-restream",
+      "title": "Connect Zoom to Restream",
+      "retrieved_at": "2026-09-07T04:05:35.218462+00:00",
+      "final_url": "https://support.restream.io/en/articles/3314278-connect-zoom-to-restream",
+      "content_sha256": "a3585288a26a6b41852304638d69e4a6a0d3f6a5dbf1e1cfac33f0b8795d70b5",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R1029917": {
+      "url": "https://support.restream.io/en/articles/1029917-connect-mobile-streamlabs-to-restream",
+      "title": "Connect mobile Streamlabs to Restream",
+      "retrieved_at": "2026-09-07T04:04:43.218733+00:00",
+      "final_url": "https://support.restream.io/en/articles/1029917-connect-mobile-streamlabs-to-restream",
+      "content_sha256": "8f963480ed9a71f00a66f392f88d38f1ad44c9a0acec1cde8c5632321a5d769e",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2226971": {
+      "url": "https://support.restream.io/en/articles/2226971-connect-larix-broadcaster-to-restream",
+      "title": "Connect Larix Broadcaster to Restream",
+      "retrieved_at": "2026-09-07T04:00:44.639868+00:00",
+      "final_url": "https://support.restream.io/en/articles/2226971-connect-larix-broadcaster-to-restream",
+      "content_sha256": "9b25d413abbcb7381b2e0e20034a5758fcd5fcf45f155c682992a6595d50dc40",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R1331080": {
+      "url": "https://support.restream.io/en/articles/1331080-connect-wirecast-go-to-restream",
+      "title": "Connect Wirecast Go to Restream",
+      "retrieved_at": "2026-09-07T04:02:17.575756+00:00",
+      "final_url": "https://support.restream.io/en/articles/1331080-connect-wirecast-go-to-restream",
+      "content_sha256": "246e2b04c887f35d564345a251a63ddd8200eff91f434bafda7b5490565f40e4",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2417391": {
+      "url": "https://support.restream.io/en/articles/2417391-stream-with-a-console",
+      "title": "Stream with a console",
+      "retrieved_at": "2026-09-07T04:00:50.547614+00:00",
+      "final_url": "https://support.restream.io/en/articles/2417391-stream-with-a-console",
+      "content_sha256": "bde7752aafe576a5116ff63dc02e4ded43dbef250f8d6034ad28fb3d3ee0b610",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R206176": {
+      "url": "https://support.restream.io/en/articles/206176-stream-with-a-capture-card",
+      "title": "Stream with a capture card",
+      "retrieved_at": "2026-09-07T04:02:40.319711+00:00",
+      "final_url": "https://support.restream.io/en/articles/206176-stream-with-a-capture-card",
+      "content_sha256": "a21d481759f18b4c15d77399c1c1b75cedde609a6c0a4903e865cd8b3bee91ab",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2448620": {
+      "url": "https://support.restream.io/en/articles/2448620-stream-playstation-games-without-a-capture-card",
+      "title": "Stream PlayStation games without a capture card",
+      "retrieved_at": "2026-09-07T04:03:44.719373+00:00",
+      "final_url": "https://support.restream.io/en/articles/2448620-stream-playstation-games-without-a-capture-card",
+      "content_sha256": "7fc6ce9139e96b70b61802a64d794fa711ec356eb07ad136c3a37c9758335e12",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R3164009": {
+      "url": "https://support.restream.io/en/articles/3164009-stream-xbox-games-without-a-capture-card",
+      "title": "Stream Xbox games without a capture card",
+      "retrieved_at": "2026-09-07T04:01:45.844372+00:00",
+      "final_url": "https://support.restream.io/en/articles/3164009-stream-xbox-games-without-a-capture-card",
+      "content_sha256": "b1d1f06a01cba5c33bcccd2f234c413cab9a514cfab805982724be10a017dd6b",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R9183117": {
+      "url": "https://support.restream.io/en/articles/9183117-how-to-do-an-audio-only-stream",
+      "title": "How to do an audio-only stream",
+      "retrieved_at": "2026-09-07T04:01:20.391478+00:00",
+      "final_url": "https://support.restream.io/en/articles/9183117-how-to-do-an-audio-only-stream",
+      "content_sha256": "638a3b8a4d568d21c062f59ea9219ac23a9d310753e610fab22063d7cec95989",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R5028560": {
+      "url": "https://support.restream.io/en/articles/5028560-record-without-going-live",
+      "title": "Record without going live",
+      "retrieved_at": "2026-09-07T04:01:20.432446+00:00",
+      "final_url": "https://support.restream.io/en/articles/5028560-record-without-going-live",
+      "content_sha256": "8cabaa98dadac1b53715208b8701f793d3b9999ddfd578202276e70355fa58bf",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R12459078": {
+      "url": "https://support.restream.io/en/articles/12459078-record-locally-in-studio-beta",
+      "title": "Record locally in Studio (Beta)",
+      "retrieved_at": "2026-09-07T04:04:36.495875+00:00",
+      "final_url": "https://support.restream.io/en/articles/12459078-record-locally-in-studio-beta",
+      "content_sha256": "ffaaf7fec15f417469628360825045c2aecead68d2c35adf8bae1f3074d3f511",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R10577576": {
+      "url": "https://support.restream.io/en/articles/10577576-stream-to-a-custom-srt-channel",
+      "title": "Stream to a Custom SRT channel",
+      "retrieved_at": "2026-09-07T04:03:51.056919+00:00",
+      "final_url": "https://support.restream.io/en/articles/10577576-stream-to-a-custom-srt-channel",
+      "content_sha256": "3913c0970be7fe15c310645059dabf1213aeca91d47b1e0ebb0ad28b5781f8dd",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R12945740": {
+      "url": "https://support.restream.io/en/articles/12945740-stream-to-a-custom-hls-channel",
+      "title": "Stream to a Custom HLS channel",
+      "retrieved_at": "2026-09-07T04:01:06.701191+00:00",
+      "final_url": "https://support.restream.io/en/articles/12945740-stream-to-a-custom-hls-channel",
+      "content_sha256": "b89b0df545f131ee36dee2c12384fd039e7039565518002bc38e3a474617b93d",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R12945355": {
+      "url": "https://support.restream.io/en/articles/12945355-stream-to-a-custom-whip-channel-beta",
+      "title": "Stream to a Custom WHIP channel (Beta)",
+      "retrieved_at": "2026-09-07T04:06:13.154139+00:00",
+      "final_url": "https://support.restream.io/en/articles/12945355-stream-to-a-custom-whip-channel-beta",
+      "content_sha256": "d237f437eb4100d9e9ec6eacaa9daf711231e505b023aa0d24711c9ba723eee1",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R4996608": {
+      "url": "https://support.restream.io/en/articles/4996608-stream-to-your-website",
+      "title": "Stream to your website",
+      "retrieved_at": "2026-09-07T04:03:57.100331+00:00",
+      "final_url": "https://support.restream.io/en/articles/4996608-stream-to-your-website",
+      "content_sha256": "bd3e78a6146d8a257486d75e7c9aa3c07409044429fd85df60c581787d163b91",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R1859385": {
+      "url": "https://support.restream.io/en/articles/1859385-how-to-use-your-rtmp-pull-links",
+      "title": "How to use your RTMP Pull links",
+      "retrieved_at": "2026-09-07T04:05:34.814286+00:00",
+      "final_url": "https://support.restream.io/en/articles/1859385-how-to-use-your-rtmp-pull-links",
+      "content_sha256": "559e07c79cee0927334d3d83d5af6b13b6c4772f2224ac7d1dfe0fe7cfee6997",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R8540565": {
+      "url": "https://support.restream.io/en/articles/8540565-how-to-add-guest-channels-to-my-studio-stream",
+      "title": "How to add guest channels to my Studio stream",
+      "retrieved_at": "2026-09-07T04:03:13.739501+00:00",
+      "final_url": "https://support.restream.io/en/articles/8540565-how-to-add-guest-channels-to-my-studio-stream",
+      "content_sha256": "05ecf405ff0ff106168d552a69c1bd096e1ab9a84bc6b28da0ff18d42532a92b",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R9267506": {
+      "url": "https://support.restream.io/en/articles/9267506-how-to-add-guest-channels-to-my-encoder-obs-stream",
+      "title": "How to add guest channels to my encoder (OBS) stream",
+      "retrieved_at": "2026-09-07T04:05:54.182876+00:00",
+      "final_url": "https://support.restream.io/en/articles/9267506-how-to-add-guest-channels-to-my-encoder-obs-stream",
+      "content_sha256": "fb4d7f2ff71608e815746814b01530e278f57e6567963f7a6e7f9c0abf3ac317",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R760428": {
+      "url": "https://support.restream.io/en/articles/760428-how-to-transcode-your-stream",
+      "title": "How to transcode your stream",
+      "retrieved_at": "2026-09-07T04:00:05.981348+00:00",
+      "final_url": "https://support.restream.io/en/articles/760428-how-to-transcode-your-stream",
+      "content_sha256": "858701e2d417b727637e2c4301cd6aaa05d147bcca8accbe1b025d7b4334cbbb",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R13624390": {
+      "url": "https://support.restream.io/en/articles/13624390-set-up-stream-disconnect-protection",
+      "title": "Set up stream disconnect protection",
+      "retrieved_at": "2026-09-07T04:02:47.393176+00:00",
+      "final_url": "https://support.restream.io/en/articles/13624390-set-up-stream-disconnect-protection",
+      "content_sha256": "e5d6f8df5502ee63f90f4c2b0000d7d0730a4ed520880a17ada9a4521cc2c4b9",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2014602": {
+      "url": "https://support.restream.io/en/articles/2014602-set-up-a-backup-stream",
+      "title": "Set up a backup stream",
+      "retrieved_at": "2026-09-07T04:02:04.561218+00:00",
+      "final_url": "https://support.restream.io/en/articles/2014602-set-up-a-backup-stream",
+      "content_sha256": "29e5865544d7da3718dcfebffb6857ba941f05338ce2ab3cb1d004cce94f2646",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2947187": {
+      "url": "https://support.restream.io/en/articles/2947187-set-up-a-proxy-for-your-channels",
+      "title": "Set up a proxy for your channels",
+      "retrieved_at": "2026-09-07T04:02:17.606310+00:00",
+      "final_url": "https://support.restream.io/en/articles/2947187-set-up-a-proxy-for-your-channels",
+      "content_sha256": "1b421be043106f74217cfd6a32d294a160bfed2ea59aea7e3f61256a7c81f562",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R9099960": {
+      "url": "https://support.restream.io/en/articles/9099960-pricing-for-premium-features",
+      "title": "Pricing for premium features",
+      "retrieved_at": "2026-09-07T04:06:07.370436+00:00",
+      "final_url": "https://support.restream.io/en/articles/9099960-pricing-for-premium-features",
+      "content_sha256": "e16b4d2cb54989267521c0adb6bd72b3923e6f4b6630d76c4b12869fabb9c503",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "S4d1b5e04b2": {
+      "url": "https://restream.io/pricing",
+      "title": "Choose how fast you want to grow",
+      "retrieved_at": "2026-09-07T04:06:07.219816+00:00",
+      "final_url": "https://restream.io/pricing",
+      "content_sha256": "a11e088b39ee09be80255523c5d7ec7e05c76332e705f3358da064943922ae2d",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R1576341": {
+      "url": "https://support.restream.io/en/articles/1576341-connect-streamlabs-to-restream",
+      "title": "Connect Streamlabs to Restream",
+      "retrieved_at": "2026-09-07T04:00:06.028177+00:00",
+      "final_url": "https://support.restream.io/en/articles/1576341-connect-streamlabs-to-restream",
+      "content_sha256": "e47511e832e68f613a6f8fd622cb63b6e6f2a9ca21a89861b5db48fb1f72cffe",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2276654": {
+      "url": "https://support.restream.io/en/articles/2276654-connect-ecamm-live-to-restream",
+      "title": "Connect Ecamm Live to Restream",
+      "retrieved_at": "2026-09-07T04:05:29.265106+00:00",
+      "final_url": "https://support.restream.io/en/articles/2276654-connect-ecamm-live-to-restream",
+      "content_sha256": "cd2e4116d370673f83eedad2a2ffcc31bca59d8e282990b5797c62945f7e56ea",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R1748371": {
+      "url": "https://support.restream.io/en/articles/1748371-connect-vmix-to-restream",
+      "title": "Connect vMix to Restream",
+      "retrieved_at": "2026-09-07T04:04:29.490916+00:00",
+      "final_url": "https://support.restream.io/en/articles/1748371-connect-vmix-to-restream",
+      "content_sha256": "cb1919fdc7e3a04e6db4bf4524eeeaebd136dbc9d43e6d0b0699f8286e85e4d9",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2488376": {
+      "url": "https://support.restream.io/en/articles/2488376-connect-liveu-to-restream",
+      "title": "Connect LiveU to Restream",
+      "retrieved_at": "2026-09-07T04:00:50.620697+00:00",
+      "final_url": "https://support.restream.io/en/articles/2488376-connect-liveu-to-restream",
+      "content_sha256": "75d2feba0e91bc25bddef33d6fcc7299e5ab708635fd2c76cce9df45ea4b2ced",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R208459": {
+      "url": "https://support.restream.io/en/articles/208459-connect-xsplit-to-restream",
+      "title": "Connect XSplit to Restream",
+      "retrieved_at": "2026-09-07T04:03:38.868160+00:00",
+      "final_url": "https://support.restream.io/en/articles/208459-connect-xsplit-to-restream",
+      "content_sha256": "e7cbb8a38c078c9b0ccfe5b05c21e8e3c2d053a36b999971796a24fc03b3ab99",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R215426": {
+      "url": "https://support.restream.io/en/articles/215426-connect-wirecast-to-restream",
+      "title": "Connect Wirecast to Restream",
+      "retrieved_at": "2026-09-07T04:01:32.675252+00:00",
+      "final_url": "https://support.restream.io/en/articles/215426-connect-wirecast-to-restream",
+      "content_sha256": "e7727daf4bcc2a817d8b1c0247d05560afc59247101c5735b703844cdaf38b67",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2454689": {
+      "url": "https://support.restream.io/en/articles/2454689-connect-tricaster-to-restream",
+      "title": "Connect TriCaster to Restream",
+      "retrieved_at": "2026-09-07T04:05:29.164542+00:00",
+      "final_url": "https://support.restream.io/en/articles/2454689-connect-tricaster-to-restream",
+      "content_sha256": "207a75d50a267ca2fd12a056a888ba4b2f4ced6db20d9e0959fe6b4c9fe57284",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R9297258": {
+      "url": "https://support.restream.io/en/articles/9297258-reply-to-chat-messages",
+      "title": "Reply to chat messages",
+      "retrieved_at": "2026-09-07T04:01:45.827447+00:00",
+      "final_url": "https://support.restream.io/en/articles/9297258-reply-to-chat-messages",
+      "content_sha256": "842075cd7fa70c60aba19a1015f7302090f62dd5c179a84342eb5369a6ec44ed",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R3928288": {
+      "url": "https://support.restream.io/en/articles/3928288-my-encoder-s-stream-quality-is-bad",
+      "title": "My encoder's stream quality is bad",
+      "retrieved_at": "2026-09-07T04:01:58.789867+00:00",
+      "final_url": "https://support.restream.io/en/articles/3928288-my-encoder-s-stream-quality-is-bad",
+      "content_sha256": "011d3cf2893d3a09c107818da239e4549460a1f70c7c506a6b0d890180bf79c1",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "R2676956": {
+      "url": "https://support.restream.io/en/articles/2676956-connect-your-discord-server-to-restream-chat",
+      "title": "Connect your Discord server to Restream Chat",
+      "retrieved_at": "2026-09-07T04:02:53.374795+00:00",
+      "final_url": "https://support.restream.io/en/articles/2676956-connect-your-discord-server-to-restream-chat",
+      "content_sha256": "25e752e7cb6458c12f37761f60bd52dd5dd93b32d458d31cfa0a4e1799601257",
+      "access": "body_retrieved",
+      "http_error": null
+    },
+    "Sa0a312bde2": {
+      "url": "https://developers.restream.io/mcp-server",
+      "title": "MCP Server",
+      "retrieved_at": "2026-09-07T04:04:09.018406+00:00",
+      "final_url": "https://developers.restream.io/mcp-server",
+      "content_sha256": "79981e0606e7550668c17ecc77eaa37fcee6cc794a69145c72708a8de171a01d",
+      "access": "body_retrieved",
+      "http_error": null
+    }
+  }
+}

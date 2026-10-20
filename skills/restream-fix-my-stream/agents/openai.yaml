@@ -1,0 +1,9 @@
+interface:
+  display_name: Fix My Stream
+  short_description: Find the next fix for your streaming or recording problem
+  default_prompt: Help me fix my stream. Ask which app I use if I have not said.
+  icon_small: ./assets/icon.svg
+  icon_large: ./assets/icon.svg
+policy:
+  products: [CHAT, CODEX]
+  allow_implicit_invocation: true

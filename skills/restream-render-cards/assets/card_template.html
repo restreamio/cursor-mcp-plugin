@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__PAGE_TITLE__</title>
+<style>
+  /* Bundled Inter (SIL OFL 1.1, see assets/fonts/OFL.txt), embedded as data URIs.
+     Nothing on this page loads from the network. */
+  __FONT_FACE_CSS__
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  __PAGE_CSS__
+
+  /* One card = one .stage at its exact pixel size. Every size below is in px,
+     never %, so the frame and safe zone read the same on every aspect ratio. */
+  .stage {
+    width: __WIDTH__px; height: __HEIGHT__px; position: relative; overflow: hidden;
+    background: __STAGE_BG__;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .card {
+    position: absolute; left: __INSET_PX__px; top: __INSET_PX__px; right: __INSET_PX__px; bottom: __INSET_PX__px;
+    border-radius: __RADIUS__px;
+    overflow: hidden;
+    font-family: __FONT_FAMILY_STACK__;
+    background: __CARD_BG__;
+    box-shadow: __CARD_SHADOW__;
+  }
+
+  __BACKGROUND_LAYER_CSS__
+
+  /* Safe content box: fixed px per aspect and preset, independent of text length.
+     The headline sits at its top; a Q&A answer is anchored to its bottom. */
+  .safe {
+    position: absolute;
+    left: __SAFE_LEFT__px; top: __SAFE_TOP__px;
+    width: __SAFE_WIDTH__px; height: __SAFE_HEIGHT__px;
+    z-index: 5; display: flex; flex-direction: column; align-items: stretch;
+  }
+  .content {
+    flex: 1 1 auto; min-height: 0; width: 100%;
+    display: flex; flex-direction: column; align-items: stretch;
+  }
+  .headwrap { flex: 0 0 auto; width: 100%; }
+  .eyebrow, .headline, .answer { max-width: 100%; overflow-wrap: break-word; word-break: break-word; }
+  .eyebrow {
+    font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: __ACCENT_COLOR__; margin-bottom: 14px;
+  }
+  .headline {
+    font-weight: 600; font-size: var(--hs); line-height: 1.22; letter-spacing: -0.015em;
+    color: __TEXT_COLOR__;
+  }
+  .answer {
+    flex: 0 0 auto; width: 100%;
+    margin-top: auto; margin-bottom: __ANSWER_GAP_PX__px;
+    font-weight: 400; font-size: var(--as); line-height: 1.5; letter-spacing: 0;
+    color: __TEXT_DIM_COLOR__;
+  }
+  /* Q&A swaps the roles: the question is the quiet line, the answer is the payload. */
+  .card.qa .headline { font-weight: 400; line-height: 1.5; letter-spacing: 0; color: __TEXT_DIM_COLOR__; }
+  .card.qa .answer { font-weight: 600; line-height: 1.22; letter-spacing: -0.015em; color: __TEXT_COLOR__; }
+  .footer {
+    flex: 0 0 auto; height: __FOOTER_HEIGHT__px;
+    display: flex; align-items: center; justify-content: __FOOTER_JUSTIFY__;
+  }
+  .logo { height: __LOGO_HEIGHT__px; opacity: 0.5; }
+</style>
+</head>
+<body>
+__PAGE_HEADER__
+__STAGES__
+<script>
+  // Autofit: shrink the headline (3 px steps, floor 44 px) and the answer
+  // (floor 40 px) until headline + gap + answer fit above the footer.
+  // Runs once the bundled fonts are loaded, for every .stage on the page.
+  (function () {
+    var MIN_H = 44, MIN_A = 40, GAP = __ANSWER_GAP_PX__;
+    function fit(stage) {
+      var headwrap = stage.querySelector('.headwrap');
+      var answerEl = stage.querySelector('.answer');
+      var content = stage.querySelector('.content');
+      var footer = stage.querySelector('.footer');
+      var footerH = footer ? footer.offsetHeight : 0;
+      var startH = parseInt(stage.getAttribute('data-hs'), 10);
+      var startA = parseInt(stage.getAttribute('data-as'), 10);
+      var stepA = Math.max(1, Math.round(startA * 0.03));
+      var maxH = content.clientHeight - footerH;
+      function apply(h, a) {
+        stage.style.setProperty('--hs', h + 'px');
+        stage.style.setProperty('--as', a + 'px');
+      }
+      function combined() {
+        var h = headwrap.offsetHeight;
+        if (answerEl) h += GAP + answerEl.offsetHeight;
+        return h;
+      }
+      var h = startH, a = startA;
+      apply(h, a);
+      while (combined() > maxH && (h > MIN_H || a > MIN_A)) {
+        if (h > MIN_H) h = Math.max(MIN_H, h - 3);
+        if (a > MIN_A) a = Math.max(MIN_A, a - stepA);
+        apply(h, a);
+      }
+      return combined() > maxH;
+    }
+    function run() {
+      var stages = document.querySelectorAll('.stage');
+      var over = [];
+      for (var i = 0; i < stages.length; i++) over.push(fit(stages[i]));
+      window.__fitOverflowed = over;
+      window.__fitDone = true;
+      if (window.__afterFit) window.__afterFit();
+    }
+    var loads = [];
+    if (document.fonts && document.fonts.load) {
+      ['400', '600', '700'].forEach(function (w) {
+        loads.push(document.fonts.load(w + " 40px " + "__FONT_LOAD_FAMILY__").catch(function () {}));
+      });
+    }
+    Promise.all(loads)
+      .then(function () { return document.fonts ? document.fonts.ready : null; })
+      .then(run, run);
+  })();
+</script>
+</body>
+</html>
