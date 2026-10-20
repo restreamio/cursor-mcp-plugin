@@ -1,8 +1,8 @@
 {
   "name": "restream",
   "displayName": "Restream",
-  "version": "1.0.0",
-  "description": "Live-code to an audience from Cursor: stream to social, a webinar page, or Slack, record only, or let AI clip the highlights. Remote MCP server with tools for events, destinations, live chat, and analytics.",
+  "version": "1.1.0",
+  "description": "Run Restream from your AI assistant: schedule, check and change live streams on YouTube, LinkedIn, Twitch and more, fix stream problems, and turn finished streams into reports, transcripts, captions, show notes, posts and cards. Remote MCP server with browser sign-in.",
   "author": {
     "name": "Restream",
     "email": "developers@restream.io"
@@ -12,10 +12,13 @@
   "license": "MIT",
   "keywords": [
     "restream",
+    "live-streaming",
     "streaming",
     "mcp",
     "video",
-    "analytics"
+    "analytics",
+    "transcripts",
+    "skills"
   ],
   "logo": "assets/logo.webp",
   "mcpServers": "mcp.json"

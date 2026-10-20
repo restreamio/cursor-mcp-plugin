@@ -1,0 +1,16 @@
+{
+  "name": "restream",
+  "owner": {
+    "name": "Restream",
+    "url": "https://restream.io"
+  },
+  "description": "Restream's plugin for AI assistants: run live streams and reuse what they produce.",
+  "plugins": [
+    {
+      "name": "restream",
+      "source": "./",
+      "description": "Schedule, check, fix and report on Restream live streams, then turn finished streams into transcripts, captions, show notes, posts, clips and cards.",
+      "category": "productivity"
+    }
+  ]
+}
