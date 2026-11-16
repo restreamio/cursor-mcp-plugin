@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "restream": {
-      "type": "http",
-      "url": "https://mcp.restream.io/mcp"
-    }
-  }
-}
