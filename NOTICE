@@ -1,0 +1,11 @@
+Restream plugin for AI assistants
+Copyright (c) 2026 Restream, Inc.
+
+The code and skill text in this repository are licensed under the MIT License (see LICENSE).
+
+The Restream name, logo and other Restream brand assets in this repository are trademarks of
+Restream, Inc. They are not licensed under the MIT License and may be used only to refer to
+Restream's products.
+
+The Inter typeface used by skills/restream-render-cards (if bundled) is licensed under the
+SIL Open Font License 1.1.
