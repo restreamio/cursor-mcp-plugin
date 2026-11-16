@@ -1,6 +1,6 @@
 {
   "name": "restream",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Schedule, check, fix and report on Restream live streams, then turn finished streams into transcripts, captions, show notes, posts, clips and cards.",
   "author": {
     "name": "Restream",
@@ -14,12 +14,11 @@
     "live-streaming",
     "streaming"
   ],
-  "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Restream",
     "shortDescription": "Run and reuse your streams",
-    "longDescription": "Restream connects your Restream account and adds skills for the whole life of a live stream. Before a stream: schedule or change streams on your connected channels (every change is shown first and needs your yes), check that channels are ready to go live, and find the next fix when a stream or recording fails. After a stream: report viewers and chat by channel, find unanswered viewer questions, export transcripts, captions, chat and recordings, and turn the stream into show notes, social post drafts, ranked clips and shareable cards. Sign in with your Restream account. Nothing is changed, posted or sent without your confirmation.",
+    "longDescription": "Restream connects your Restream account through its official MCP server. Before a stream: schedule or change streams on your connected channels (every change is shown first and needs your yes), check that channels are ready to go live, and find the next fix when a stream or recording fails. After a stream: report viewers and chat by channel, find unanswered viewer questions, export transcripts, captions, chat and recordings, and turn the stream into show notes, social post drafts, ranked clips and shareable cards. Sign in with your Restream account. Nothing is changed, posted or sent without your confirmation.",
     "developerName": "Restream",
     "category": "Productivity",
     "capabilities": [
@@ -43,6 +42,5 @@
     "logoDark": "./assets/logo.png",
     "composerIcon": "./assets/icon.png",
     "composerIconDark": "./assets/icon.png"
-  },
-  "onboardingSkill": "./skills/restream-get-started/SKILL.md"
+  }
 }
